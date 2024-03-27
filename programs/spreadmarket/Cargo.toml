@@ -1,7 +1,7 @@
 [package]
 name = "spreadmarket"
 version = "0.1.0"
-description = "Created with Anchor"
+description = "Delta neutral option vault product"
 edition = "2021"
 
 [lib]
@@ -14,6 +14,15 @@ no-idl = []
 no-log-ix-name = []
 cpi = ["no-entrypoint"]
 default = []
+localnet = []
 
 [dependencies]
 anchor-lang = "0.29.0"
+anchor-spl = "0.29.0"
+#solana-program = "=1.14.28"
+#solana-program = "=1.16.23"
+solana-program = "=1.17.9"
+
+bytemuck = { version = "1.7", features = ["derive"] }
+static_assertions = "1.1.0"
+psy-macros = "1.0.0"
