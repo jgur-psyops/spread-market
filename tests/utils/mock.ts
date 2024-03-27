@@ -18,6 +18,22 @@ import {
   getAssociatedTokenAddressSync,
 } from "@solana/spl-token";
 
+export type UserState = {
+  users: mockUser[];
+  numUsers: number;
+  /** Uses preset adminKeypairs[0] */
+  vaultAdmin: mockUser;
+  /** The program owner is also the provider wallet */
+  globalProgramAdmin: mockUser;
+};
+
+export let userState: UserState = {
+  users: [],
+  numUsers: 2,
+  vaultAdmin: undefined,
+  globalProgramAdmin: undefined,
+}
+
 export type Ecosystem = {
   /** A generic wsol mint with 9 decimals (same as native) */
   wsolMint: Keypair;
@@ -37,8 +53,16 @@ export type Ecosystem = {
   usdcDecimals: number;
 };
 
-/** Builds some random keypairs that are recycled between tests */
+/** Builds some random keypairs that are recycled between tests to use as mints */
 export const mintKeypairs = [
+  Keypair.generate(),
+  Keypair.generate(),
+  Keypair.generate(),
+  Keypair.generate(),
+];
+
+/** Builds some random keypairs that are recycled between tests to use as vault admins */
+export const adminKeypairs = [
   Keypair.generate(),
   Keypair.generate(),
   Keypair.generate(),

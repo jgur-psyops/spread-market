@@ -1,8 +1,6 @@
 use anchor_lang::prelude::*;
-use anchor_spl::token::{Mint, Token, TokenAccount};
-use bytemuck::Zeroable;
+use anchor_spl::token::{Mint, Token};
 
-use crate::errors::ErrorCode;
 use crate::state::SpreadVault;
 
 #[derive(Accounts)]
@@ -36,15 +34,35 @@ pub struct InitSpreadVault<'info> {
     pub system_program: Program<'info, System>,
 }
 
-pub fn handler(ctx: Context<InitSpreadVault>, nonce: u16, admin: Pubkey) -> Result<()> {
+pub fn init_spread_vault(
+    ctx: Context<InitSpreadVault>,
+    nonce: u16,
+    admin: Pubkey,
+    withdraw_authority: Pubkey,
+    fee_rate: u32,
+    option_duration: u32,
+) -> Result<()> {
     let mut spread_vault = ctx.accounts.spread_vault.load_init()?;
+    spread_vault.key = ctx.accounts.spread_vault.key();
     spread_vault.payment_mint = ctx.accounts.payment_mint.key();
     spread_vault.asset_mint = ctx.accounts.asset_mint.key();
     spread_vault.admin = admin;
+    spread_vault.withdraw_authority = withdraw_authority;
+
+    // Inited in another ix to handle stack constraints.
+    spread_vault.lp_mint = Pubkey::default();
+    spread_vault.funding_pool = Pubkey::default();
+    spread_vault.premiums_pool = Pubkey::default();
+    spread_vault.fee_pool = Pubkey::default();
 
     spread_vault.nonce = nonce;
     spread_vault.payment_mint_decimals = ctx.accounts.payment_mint.decimals;
     spread_vault.asset_mint_decimals = ctx.accounts.asset_mint.decimals;
+    spread_vault.volatility = 0;
+    spread_vault.risk_free_rate = 0;
+    spread_vault.fee_rate = fee_rate;
+    spread_vault.epoch = 0;
+    spread_vault.option_duration = option_duration;
 
     Ok(())
 }
