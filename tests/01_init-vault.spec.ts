@@ -23,7 +23,12 @@ import {
   deriveSpreadVault,
 } from "../packages/pdas";
 import { assertKeysEqual } from "./utils/genericTests";
-import { SECONDS_PER_WEEK, u32MAX } from "./utils/common";
+import {
+  DEFAULT_FEE_RATE,
+  FIVE_SECONDS,
+  SECONDS_PER_WEEK,
+  u32MAX,
+} from "./utils/common";
 import { program } from "@coral-xyz/anchor/dist/cjs/native/system";
 import { createMintToInstruction } from "@solana/spl-token";
 
@@ -59,7 +64,8 @@ describe("spreadmarket", () => {
 
   it("Init new spread vault - happy path", async () => {
     let vaultAdmin = userState.vaultAdmin;
-    [spreadVault] = deriveSpreadVault(
+    let bump = 0;
+    [spreadVault, bump] = deriveSpreadVault(
       program.programId,
       ecosystem.usdcMint.publicKey,
       ecosystem.tokenAMint.publicKey,
@@ -73,8 +79,8 @@ describe("spreadmarket", () => {
       vaultAdmin.wallet.publicKey,
       ecosystem.usdcMint.publicKey,
       ecosystem.tokenAMint.publicKey,
-      u32MAX * 0.01, // 1%
-      SECONDS_PER_WEEK,
+      DEFAULT_FEE_RATE,
+      FIVE_SECONDS,
       nonce
     );
 
@@ -93,6 +99,14 @@ describe("spreadmarket", () => {
     const [premiumsPool] = derivePremiumsPool(program.programId, spreadVault);
     const [feePool] = deriveFeePool(program.programId, spreadVault);
 
+    if (verbose) {
+      console.log("init spread vault:  " + spreadVault);
+      console.log(" lp mint:           " + lpMint);
+      console.log(" funding pool:      " + fundingPool);
+      console.log(" premiums pool:     " + premiumsPool);
+      console.log(" fee pool:          " + feePool);
+    }
+
     let vault = await program.account.spreadVault.fetch(spreadVault);
     assertKeysEqual(vault.key, spreadVault);
     assertKeysEqual(vault.paymentMint, ecosystem.usdcMint.publicKey);
@@ -104,9 +118,13 @@ describe("spreadmarket", () => {
     assertKeysEqual(vault.premiumsPool, premiumsPool);
     assertKeysEqual(vault.feePool, feePool);
 
+    assert.equal(vault.optionDuration, FIVE_SECONDS);
+    assert.equal(vault.feeRate, DEFAULT_FEE_RATE);
+
     assert.equal(vault.nonce, nonce);
     assert.equal(vault.paymentMintDecimals, ecosystem.usdcDecimals);
     assert.equal(vault.assetMintDecimals, ecosystem.tokenADecimals);
+    assert.equal(vault.bump, bump);
   });
 
   /**

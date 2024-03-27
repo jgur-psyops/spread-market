@@ -2,7 +2,7 @@ use anchor_lang::error_code;
 
 #[error_code]
 pub enum ErrorCode {
-    #[msg("placeholder")]
-    Placeholder, // 6000
+    #[msg("Math overflow or other generic math error")]
+    MathErr, // 6000
 
 }

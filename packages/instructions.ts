@@ -79,6 +79,35 @@ export const initSpreadVaultAccs = (
   return ix;
 };
 
+export const deposit = (
+  program: Program<Spreadmarket>,
+  user: PublicKey,
+  spreadVault: PublicKey,
+  paymentMint: PublicKey,
+  lpMint: PublicKey,
+  paymentAcc: PublicKey,
+  lpAcc: PublicKey,
+  amount: BN
+) => {
+  const [fundingPool] = deriveFundingPool(program.programId, spreadVault);
+
+  const ix = program.methods
+    .deposit(amount)
+    .accounts({
+      user: user,
+      spreadVault: spreadVault,
+      paymentMint: paymentMint,
+      lpMint: lpMint,
+      fundingPool: fundingPool,
+      paymentAcc: paymentAcc,
+      lpAcc: lpAcc,
+      tokenProgram: TOKEN_PROGRAM_ID,
+    })
+    .instruction();
+
+  return ix;
+};
+
 export const setVol = (
   program: Program<Spreadmarket>,
   admin: PublicKey,

@@ -39,4 +39,8 @@ pub mod spreadmarket {
     pub fn set_vol(ctx: Context<SetVol>, vol: u64, risk_free: u32) -> Result<()> {
         instructions::set_vol::set_vol(ctx, vol, risk_free)
     }
+
+    pub fn deposit(ctx: Context<Deposit>, amount: u64) -> Result<()> {
+        instructions::deposit::deposit(ctx, amount)
+    }
 }

@@ -3,7 +3,6 @@ use bytemuck::{Pod, Zeroable};
 use psy_macros::assert_size;
 
 pub const VAULT_PADDING: usize = 256;
-pub const LP_MINT_DECIMALS: u8 = 6;
 
 // #[assert_size(1024)]
 #[account(zero_copy)]
@@ -21,6 +20,7 @@ pub struct SpreadVault {
     /// * All options are cash-settled, the program never transacts with this currency directly.
     pub asset_mint: Pubkey,
     /// Mints the tokens that represent stake in the vault's assets.
+    /// * Always has the same decimals as the payment mint.
     pub lp_mint: Pubkey,
     /// The vault's active funds are kept in this pool and can never be withdrawn (except by users).
     /// * Stores `payment_mint` currency.
@@ -52,11 +52,14 @@ pub struct SpreadVault {
     /// Expiration time of options sold. In seconds.
     pub option_duration: u32,
     // _padding0: [u8; 4],
-
     pub nonce: u16,
     pub payment_mint_decimals: u8,
     pub asset_mint_decimals: u8,
-    _padding1: [u8; 4],
+    pub bump: u8,
+    _padding1: [u8; 3],
+
+    /// Information about this epoch's available Options for sale and current performance.
+    pub sale_data: OptionSaleData,
 
     _reserved0: [u8; 16],
     _reserved1: [u8; 256],
@@ -65,4 +68,52 @@ pub struct SpreadVault {
 
 impl SpreadVault {
     pub const LEN: usize = std::mem::size_of::<SpreadVault>();
+}
+
+#[derive(AnchorSerialize, AnchorDeserialize, Clone, Copy, Zeroable, Pod)]
+#[repr(C)]
+pub struct OptionSaleData {
+    /// Call option strikes this vault has for sale
+    /// * The lower price is always first, followed by the higher price.
+    /// * Price ranges never overlap and are always in order. E.g. 100-105, 105-110, etc.
+    /// * In option parlance, the vault "sells" the lower leg and "buys" the upper leg. I.e. the
+    ///   vault is selling a call spread between lower/upper
+    /// * Max loss (for the vault) is the difference between strikes.
+    /// * The vault gains the premium (sell price of lower - buy price of upper)
+    /// * zeroed if unused.
+    pub calls: [Option; 8],
+
+    /// Put option strikes this vault has for sale
+    /// * The lower price is always first, followed by the higher price.
+    /// * Price ranges never overlap and are always in order. E.g. 100-105, 105-110, etc.
+    /// * In option parlance, the vault "sells" the upper leg and "buys" the lower leg. I.e. the
+    ///   vault is selling a put spread between upper/lower
+    /// * Max loss (for the vault) is the difference between strikes.
+    /// * The vault gains the premium (sell price of upper - buy price of lower)
+    /// * zeroed if unused.
+    pub puts: [Option; 8],
+
+    /// Asset price when the epoch began
+    pub price_at_start: u64,
+    /// Unix timestamp when options expire and next epoch begins.
+    pub expiration: i64,
+    /// Net earned in calls this epoch
+    pub net_call_premiums: u64,
+    /// Net earned in puts this epoch
+    pub net_put_premiums: u64,
+
+    _reserved1: [u8; 64],
+}
+
+#[derive(AnchorSerialize, AnchorDeserialize, Clone, Copy, Zeroable, Pod)]
+#[repr(C)]
+pub struct Option {
+    /// The lower strike price in the option spread
+    strike_lower: u64,
+    /// The upper strike price in the option spread
+    strike_upper: u64,
+    /// Number of options sold in this epoch with that price range.
+    volume_sold: u64,
+    /// Max loss of this spread multiplied by the volume, e.g. max realized loss of the vault
+    exposure: u64,
 }

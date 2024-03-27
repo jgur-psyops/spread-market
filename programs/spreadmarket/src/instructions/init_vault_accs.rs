@@ -1,7 +1,7 @@
 use anchor_lang::prelude::*;
 use anchor_spl::token::{Mint, Token, TokenAccount};
 
-use crate::state::{SpreadVault, LP_MINT_DECIMALS};
+use crate::state::SpreadVault;
 
 #[derive(Accounts)]
 pub struct InitVaultAccs<'info> {
@@ -23,7 +23,7 @@ pub struct InitVaultAccs<'info> {
         seeds = [&spread_vault.key().to_bytes()[..], b"lpMint"],
         bump,
         payer = admin,
-        mint::decimals = LP_MINT_DECIMALS,
+        mint::decimals = payment_mint.decimals,
         mint::authority = spread_vault
     )]
     pub lp_mint: Account<'info, Mint>,

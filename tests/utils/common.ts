@@ -10,6 +10,10 @@ export const u16MAX: number = 65_535;
 export const u8MAX: number = 255;
 /** 604800 */
 export const SECONDS_PER_WEEK: number = 604800;
+/** 5 */
+export const FIVE_SECONDS: number = 5;
+/** 1%, as u32 */
+export const DEFAULT_FEE_RATE = Math.floor(u32MAX * 0.01);
 
 /**
  * Convert a percentage that has been expressed as some number out of u32 max into a human readable
@@ -32,7 +36,7 @@ export const getTokenBalance = async (
 ) => {
   const accountInfo = await provider.connection.getAccountInfo(account);
   if (!accountInfo) {
-    console.error("Tried to balance of acc that doesn't exist");
+    console.error("Tried to read balance of acc that doesn't exist");
     return 0;
   }
   const data: RawAccount = AccountLayout.decode(accountInfo.data);
