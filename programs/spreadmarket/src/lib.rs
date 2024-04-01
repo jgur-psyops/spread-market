@@ -19,6 +19,7 @@ pub mod spreadmarket {
         nonce: u16,
         admin: Pubkey,
         withdraw_authority: Pubkey,
+        asset_oracle: Pubkey,
         fee_rate: u32,
         option_duration: u32,
     ) -> Result<()> {
@@ -27,13 +28,17 @@ pub mod spreadmarket {
             nonce,
             admin,
             withdraw_authority,
+            asset_oracle,
             fee_rate,
             option_duration,
         )
     }
 
-    pub fn init_vault_accs(ctx: Context<InitVaultAccs>) -> Result<()> {
-        instructions::init_vault_accs::init_vault_accs(ctx)
+    pub fn init_vault_accs_p1(ctx: Context<InitVaultAccsP1>) -> Result<()> {
+        instructions::init_vault_accs_p1::init_vault_accs_p1(ctx)
+    }
+    pub fn init_vault_accs_p2(ctx: Context<InitVaultAccsP2>) -> Result<()> {
+        instructions::init_vault_accs_p2::init_vault_accs_p2(ctx)
     }
 
     pub fn set_vol(ctx: Context<SetVol>, vol: u64, risk_free: u32) -> Result<()> {
@@ -42,5 +47,17 @@ pub mod spreadmarket {
 
     pub fn deposit(ctx: Context<Deposit>, amount: u64) -> Result<()> {
         instructions::deposit::deposit(ctx, amount)
+    }
+
+    pub fn start_market_epoch(
+        ctx: Context<StartMarketEpoch>,
+        call_strikes: [u64; 8],
+        put_strikes: [u64; 8],
+    ) -> Result<()> {
+        instructions::start_market_epoch::start_market_epoch(ctx, call_strikes, put_strikes)
+    }
+
+    pub fn expire_market(ctx: Context<ExpireMarket>) -> Result<()> {
+        instructions::expire_market::expire_market(ctx)
     }
 }

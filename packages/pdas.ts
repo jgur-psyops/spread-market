@@ -18,6 +18,21 @@ export const deriveSpreadVault = (
   );
 };
 
+export const deriveMarketEpoch = (
+  programId: PublicKey,
+  spreadVault: PublicKey,
+  epoch: number,
+) => {
+  return PublicKey.findProgramAddressSync(
+    [
+      spreadVault.toBuffer(),
+      new BN(epoch).toArrayLike(Buffer, "le", 4),
+      Buffer.from("epoch", "utf-8"),
+    ],
+    programId
+  );
+};
+
 export const deriveLpMint = (programId: PublicKey, spreadVault: PublicKey) => {
   return PublicKey.findProgramAddressSync(
     [spreadVault.toBuffer(), Buffer.from("lpMint", "utf-8")],

@@ -5,12 +5,13 @@ import { initSpreadVault, initSpreadVaultAccs } from "../packages/instructions";
 import { assert } from "chai";
 import {
   Ecosystem,
+  Oracles,
   SetupTestUserOptions,
   adminKeypairs,
   createMintsIfNeeded,
   echoEcosystemInfo,
   getGenericEcosystem,
-  mockUser,
+  getGenericOracles,
   setupTestUser,
   userState,
 } from "./utils/mock";
@@ -26,15 +27,13 @@ import { assertKeysEqual } from "./utils/genericTests";
 import {
   DEFAULT_FEE_RATE,
   FIVE_SECONDS,
-  SECONDS_PER_WEEK,
-  u32MAX,
 } from "./utils/common";
-import { program } from "@coral-xyz/anchor/dist/cjs/native/system";
 import { createMintToInstruction } from "@solana/spl-token";
+import { setupPythOracles } from "./utils/pythMocks";
 
 const verbose: boolean = true;
 
-describe("spreadmarket", () => {
+describe("Init Spreadmarket", () => {
   anchor.setProvider(anchor.AnchorProvider.env());
 
   const program: Program<Spreadmarket> = anchor.workspace.Spreadmarket;
@@ -42,6 +41,7 @@ describe("spreadmarket", () => {
   const wallet = provider.wallet as anchor.Wallet;
 
   let ecosystem: Ecosystem = getGenericEcosystem();
+  let oracles: Oracles = getGenericOracles();
 
   let spreadVault: PublicKey;
   const nonce = 0;
@@ -60,6 +60,8 @@ describe("spreadmarket", () => {
     }
 
     await createMockUsers();
+
+    await initOracles();
   });
 
   it("Init new spread vault - happy path", async () => {
@@ -77,6 +79,7 @@ describe("spreadmarket", () => {
       vaultAdmin.wallet.publicKey,
       vaultAdmin.wallet.publicKey,
       vaultAdmin.wallet.publicKey,
+      oracles.tokenAOracle.publicKey,
       ecosystem.usdcMint.publicKey,
       ecosystem.tokenAMint.publicKey,
       DEFAULT_FEE_RATE,
@@ -91,7 +94,7 @@ describe("spreadmarket", () => {
       ecosystem.usdcMint.publicKey
     );
     await vaultAdmin.userSpreadProgram.provider.sendAndConfirm(
-      new Transaction().add(initIx, initAccsIx)
+      new Transaction().add(initIx, ...initAccsIx)
     );
 
     const [lpMint] = deriveLpMint(program.programId, spreadVault);
@@ -113,6 +116,7 @@ describe("spreadmarket", () => {
     assertKeysEqual(vault.assetMint, ecosystem.tokenAMint.publicKey);
     assertKeysEqual(vault.admin, vaultAdmin.wallet.publicKey);
     assertKeysEqual(vault.withdrawAuthority, vaultAdmin.wallet.publicKey);
+    assertKeysEqual(vault.assetOracle, oracles.tokenAOracle.publicKey);
     assertKeysEqual(vault.lpMint, lpMint);
     assertKeysEqual(vault.fundingPool, fundingPool);
     assertKeysEqual(vault.premiumsPool, premiumsPool);
@@ -200,5 +204,33 @@ describe("spreadmarket", () => {
     );
 
     await program.provider.sendAndConfirm(tx);
+  };
+
+  const initOracles = async () => {
+    await setupPythOracles(
+      wallet,
+      oracles.wsolPrice,
+      oracles.wsolDecimals,
+      oracles.usdcPrice,
+      oracles.usdcDecimals,
+      oracles.tokenAPrice,
+      oracles.tokenADecimals,
+      oracles.tokenBPrice,
+      oracles.tokenBDecimals,
+      verbose,
+      {
+        wsol: oracles.wsolOracle,
+        usdc: oracles.usdcOracle,
+        a: oracles.tokenAOracle,
+        b: oracles.tokenBOracle,
+      },
+      {
+        // Skip setting up wsol/b for test performance
+        wsol: true,
+        usdc: false,
+        a: false,
+        b: true,
+      }
+    );
   };
 });

@@ -22,7 +22,7 @@ import { assert } from "chai";
 
 const verbose: boolean = true;
 
-describe("spreadmarket", () => {
+describe("Deposit", () => {
   anchor.setProvider(anchor.AnchorProvider.env());
 
   const program: Program<Spreadmarket> = anchor.workspace.Spreadmarket;

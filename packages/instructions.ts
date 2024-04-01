@@ -7,6 +7,7 @@ import {
   deriveFeePool,
   deriveFundingPool,
   deriveLpMint,
+  deriveMarketEpoch,
   derivePremiumsPool,
   deriveSpreadVault,
 } from "./pdas";
@@ -16,6 +17,7 @@ export const initSpreadVault = (
   payer: PublicKey,
   admin: PublicKey,
   withdrawAuthority: PublicKey,
+  assetOracle: PublicKey,
   paymentMint: PublicKey,
   assetMint: PublicKey,
   feeRate: number,
@@ -30,7 +32,14 @@ export const initSpreadVault = (
   );
 
   const ix = program.methods
-    .initVault(nonce, admin, withdrawAuthority, feeRate, option_duration)
+    .initVault(
+      nonce,
+      admin,
+      withdrawAuthority,
+      assetOracle,
+      feeRate,
+      option_duration
+    )
     .accounts({
       payer: payer,
 
@@ -47,7 +56,7 @@ export const initSpreadVault = (
   return ix;
 };
 
-export const initSpreadVaultAccs = (
+export const initSpreadVaultAccs = async (
   program: Program<Spreadmarket>,
   admin: PublicKey,
   spreadVault: PublicKey,
@@ -58,15 +67,13 @@ export const initSpreadVaultAccs = (
   const [premiumsPool] = derivePremiumsPool(program.programId, spreadVault);
   const [feepool] = deriveFeePool(program.programId, spreadVault);
 
-  const ix = program.methods
-    .initVaultAccs()
+  const ix1 = await program.methods
+    .initVaultAccsP1()
     .accounts({
       admin: admin,
       spreadVault: spreadVault,
       paymentMint: paymentMint,
 
-      lpMint: lpMint,
-      fundingPool: fundingPool,
       premiumsPool: premiumsPool,
       feePool: feepool,
 
@@ -76,7 +83,23 @@ export const initSpreadVaultAccs = (
     })
     .instruction();
 
-  return ix;
+  const ix2 = await program.methods
+    .initVaultAccsP2()
+    .accounts({
+      admin: admin,
+      spreadVault: spreadVault,
+      paymentMint: paymentMint,
+
+      lpMint: lpMint,
+      fundingPool: fundingPool,
+
+      tokenProgram: TOKEN_PROGRAM_ID,
+      rent: SYSVAR_RENT_PUBKEY,
+      systemProgram: SystemProgram.programId,
+    })
+    .instruction();
+
+  return [ix1, ix2];
 };
 
 export const deposit = (
@@ -120,6 +143,36 @@ export const setVol = (
     .accounts({
       admin: admin,
       spreadVault: spreadVault,
+    })
+    .instruction();
+
+  return ix;
+};
+
+export const startMarket = (
+  program: Program<Spreadmarket>,
+  callStrikes: BN[],
+  putStrikes: BN[],
+  epoch: number,
+  admin: PublicKey,
+  spreadVault: PublicKey,
+  assetOracle: PublicKey
+) => {
+  const [marketEpoch] = deriveMarketEpoch(
+    program.programId,
+    spreadVault,
+    epoch
+  );
+
+  const ix = program.methods
+    .startMarketEpoch(callStrikes, putStrikes)
+    .accounts({
+      admin: admin,
+      spreadVault: spreadVault,
+      marketEpoch: marketEpoch,
+      assetOracle: assetOracle,
+      rent: SYSVAR_RENT_PUBKEY,
+      systemProgram: SystemProgram.programId,
     })
     .instruction();
 

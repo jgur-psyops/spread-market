@@ -1,8 +1,9 @@
 use anchor_lang::prelude::*;
 use bytemuck::{Pod, Zeroable};
-use psy_macros::assert_size;
+//use psy_macros::assert_size;
 
 pub const VAULT_PADDING: usize = 256;
+pub const PRICE_DECIMALS: u8 = 6;
 
 // #[assert_size(1024)]
 #[account(zero_copy)]
@@ -17,7 +18,7 @@ pub struct SpreadVault {
     /// Purchases are settled in this currency. This is typically a stablecoin.
     pub payment_mint: Pubkey,
     /// The currency for which options are bought and sold.
-    /// * All options are cash-settled, the program never transacts with this currency directly.
+    /// * All options are cash-settled, the program never transacts with this token directly.
     pub asset_mint: Pubkey,
     /// Mints the tokens that represent stake in the vault's assets.
     /// * Always has the same decimals as the payment mint.
@@ -28,7 +29,7 @@ pub struct SpreadVault {
     /// The vault's earnings are stored here until the end of the epoch
     /// * Stores `payment_mint` currency.
     pub premiums_pool: Pubkey,
-    /// The pool where fees earned by the protocol are kept.
+    /// The pool where fees earned by the vault are kept.
     /// * Only the `withdraw_authority` can reclaim these funds.
     /// * Stores `payment_mint` currency.
     pub fee_pool: Pubkey,
@@ -81,7 +82,7 @@ pub struct OptionSaleData {
     /// * Max loss (for the vault) is the difference between strikes.
     /// * The vault gains the premium (sell price of lower - buy price of upper)
     /// * zeroed if unused.
-    pub calls: [Option; 8],
+    pub calls: [SpreadOption; 8],
 
     /// Put option strikes this vault has for sale
     /// * The lower price is always first, followed by the higher price.
@@ -91,15 +92,15 @@ pub struct OptionSaleData {
     /// * Max loss (for the vault) is the difference between strikes.
     /// * The vault gains the premium (sell price of upper - buy price of lower)
     /// * zeroed if unused.
-    pub puts: [Option; 8],
+    pub puts: [SpreadOption; 8],
 
-    /// Asset price when the epoch began
+    /// Asset price when the epoch began. Uses `PRICE_DECIMALS`
     pub price_at_start: u64,
     /// Unix timestamp when options expire and next epoch begins.
     pub expiration: i64,
-    /// Net earned in calls this epoch
+    /// Net earned in calls this epoch, uses `payment_mint_decimals`
     pub net_call_premiums: u64,
-    /// Net earned in puts this epoch
+    /// Net earned in puts this epoch, uses `payment_mint_decimals`
     pub net_put_premiums: u64,
 
     _reserved1: [u8; 64],
@@ -107,13 +108,32 @@ pub struct OptionSaleData {
 
 #[derive(AnchorSerialize, AnchorDeserialize, Clone, Copy, Zeroable, Pod)]
 #[repr(C)]
-pub struct Option {
-    /// The lower strike price in the option spread
-    strike_lower: u64,
-    /// The upper strike price in the option spread
-    strike_upper: u64,
-    /// Number of options sold in this epoch with that price range.
-    volume_sold: u64,
+pub struct SpreadOption {
+    /// The lower strike price in the option spread. Uses `PRICE_DECIMALS`
+    pub strike_lower: u64,
+    /// The upper strike price in the option spread. Uses `PRICE_DECIMALS`
+    pub strike_upper: u64,
+    /// Number of options sold in this epoch with that price range. Note that 1 volume = 1 contract
+    /// for 1 asset, e.g. if the asset is SOL, 1 contract controls 1 SOL
+    pub volume_sold: u64,
     /// Max loss of this spread multiplied by the volume, e.g. max realized loss of the vault
-    exposure: u64,
+    pub exposure: u64,
+    /// 0 if this slot is not in use, else in use
+    pub active: u8,
+    _padding1: [u8; 7],
+}
+
+impl SpreadOption {
+    pub const LEN: usize = std::mem::size_of::<SpreadOption>();
+
+    pub fn new(lower: u64, upper: u64) -> Self {
+        SpreadOption {
+            strike_lower: lower,
+            strike_upper: upper,
+            volume_sold: 0,
+            exposure: 0,
+            active: 1,
+            _padding1: [0; 7],
+        }
+    }
 }

@@ -40,6 +40,7 @@ pub fn init_spread_vault(
     nonce: u16,
     admin: Pubkey,
     withdraw_authority: Pubkey,
+    asset_oracle: Pubkey,
     fee_rate: u32,
     option_duration: u32,
 ) -> Result<()> {
@@ -55,6 +56,7 @@ pub fn init_spread_vault(
     spread_vault.funding_pool = Pubkey::default();
     spread_vault.premiums_pool = Pubkey::default();
     spread_vault.fee_pool = Pubkey::default();
+    spread_vault.asset_oracle = asset_oracle;
 
     spread_vault.volatility = 0;
     spread_vault.risk_free_rate = 0;
@@ -65,7 +67,7 @@ pub fn init_spread_vault(
     spread_vault.nonce = nonce;
     spread_vault.payment_mint_decimals = ctx.accounts.payment_mint.decimals;
     spread_vault.asset_mint_decimals = ctx.accounts.asset_mint.decimals;
-    spread_vault.bump = ctx.bumps.spread_vault;
+    spread_vault.bump = *ctx.bumps.get("spread_vault").unwrap();
 
     spread_vault.sale_data = OptionSaleData::zeroed();
 

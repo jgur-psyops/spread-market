@@ -17,6 +17,8 @@ import {
   createInitializeMintInstruction,
   getAssociatedTokenAddressSync,
 } from "@solana/spl-token";
+import { Mocks } from "../../target/types/mocks";
+import { BN } from "bn.js";
 
 export type UserState = {
   users: mockUser[];
@@ -32,7 +34,7 @@ export let userState: UserState = {
   numUsers: 2,
   vaultAdmin: undefined,
   globalProgramAdmin: undefined,
-}
+};
 
 export type Ecosystem = {
   /** A generic wsol mint with 9 decimals (same as native) */
@@ -53,6 +55,25 @@ export type Ecosystem = {
   usdcDecimals: number;
 };
 
+export type Oracles = {
+  wsolOracle: Keypair;
+  usdcOracle: Keypair;
+  tokenAOracle: Keypair;
+  tokenBOracle: Keypair;
+
+  wsolPrice: number;
+  wsolDecimals: number;
+
+  usdcPrice: number;
+  usdcDecimals: number;
+
+  tokenAPrice: number;
+  tokenADecimals: number;
+
+  tokenBPrice: number;
+  tokenBDecimals: number;
+};
+
 /** Builds some random keypairs that are recycled between tests to use as mints */
 export const mintKeypairs = [
   Keypair.generate(),
@@ -63,6 +84,14 @@ export const mintKeypairs = [
 
 /** Builds some random keypairs that are recycled between tests to use as vault admins */
 export const adminKeypairs = [
+  Keypair.generate(),
+  Keypair.generate(),
+  Keypair.generate(),
+  Keypair.generate(),
+];
+
+/** Builds some random keypairs that are recycled between tests to use as oracles */
+export const oracleKeypairs = [
   Keypair.generate(),
   Keypair.generate(),
   Keypair.generate(),
@@ -87,6 +116,34 @@ export const getGenericEcosystem = () => {
     usdcDecimals: 6,
   };
   return ecosystem;
+};
+
+/**
+ * Random keypairs for all oracles.
+ *
+ * 6 Decimals for usdc. 9 decimals for sol. 8 decimals to token A, 6 for token B
+ * @returns
+ */
+export const getGenericOracles = () => {
+  let oracles: Oracles = {
+    wsolOracle: oracleKeypairs[0],
+    usdcOracle: oracleKeypairs[1],
+    tokenAOracle: oracleKeypairs[2],
+    tokenBOracle: oracleKeypairs[3],
+
+    wsolPrice: 200,
+    wsolDecimals: 9,
+
+    usdcPrice: 1,
+    usdcDecimals: 6,
+
+    tokenAPrice: 100,
+    tokenADecimals: 8,
+
+    tokenBPrice: 50,
+    tokenBDecimals: 6,
+  };
+  return oracles;
 };
 
 /**
@@ -380,4 +437,61 @@ export const createMintsIfNeeded = async (
   if (tx.instructions.length > 0) {
     await provider.sendAndConfirm(tx, signers);
   }
+};
+
+/**
+ * Creates an account to store data arbitrary data.
+ * @param program - the mock program
+ * @param space - for account space and rent exemption
+ * @param wallet - pays tx fee
+ * @param newAccount - (Optional) random keypair if not specified
+ * @returns address of the newly created account
+ */
+export const createMockAccount = async (
+  program: Program<Mocks>,
+  space: number,
+  wallet: Wallet,
+  newAccount: Keypair = Keypair.generate()
+) => {
+  const createTx = new Transaction().add(
+    SystemProgram.createAccount({
+      fromPubkey: wallet.publicKey,
+      newAccountPubkey: newAccount.publicKey,
+      programId: program.programId,
+      lamports:
+        await program.provider.connection.getMinimumBalanceForRentExemption(
+          space
+        ),
+      space,
+    })
+  );
+
+  await program.provider.sendAndConfirm(createTx, [wallet.payer, newAccount]);
+  return newAccount;
+};
+
+/**
+ * Writes arbitrary bytes to a mock account
+ * @param program - the Mock program
+ * @param wallet - pays tx fee
+ * @param account - account to write into (create with `createMockAccount` first)
+ * @param offset - byte to start writing
+ * @param input - bytes to write
+ */
+export const storeMockAccount = async (
+  program: Program<Mocks>,
+  wallet: Wallet,
+  account: Keypair,
+  offset: number,
+  input: Buffer
+) => {
+  const tx = new Transaction().add(
+    await program.methods
+      .write(new BN(offset), input)
+      .accounts({
+        target: account.publicKey,
+      })
+      .instruction()
+  );
+  await program.provider.sendAndConfirm(tx, [wallet.payer, account]);
 };
