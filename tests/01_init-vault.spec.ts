@@ -27,6 +27,7 @@ import { assertKeysEqual } from "./utils/genericTests";
 import {
   DEFAULT_FEE_RATE,
   FIVE_SECONDS,
+  SECONDS_PER_WEEK,
 } from "./utils/common";
 import { createMintToInstruction } from "@solana/spl-token";
 
@@ -44,6 +45,7 @@ describe("Init Spreadmarket", () => {
 
   let spreadVault: PublicKey;
   const nonce = 0;
+  const duration = SECONDS_PER_WEEK;
 
   before(async () => {
     await createMintsIfNeeded(wallet.publicKey, provider, ecosystem);
@@ -80,7 +82,7 @@ describe("Init Spreadmarket", () => {
       ecosystem.usdcMint.publicKey,
       ecosystem.tokenAMint.publicKey,
       DEFAULT_FEE_RATE,
-      FIVE_SECONDS,
+      duration,
       nonce
     );
 
@@ -119,7 +121,7 @@ describe("Init Spreadmarket", () => {
     assertKeysEqual(vault.premiumsPool, premiumsPool);
     assertKeysEqual(vault.feePool, feePool);
 
-    assert.equal(vault.optionDuration, FIVE_SECONDS);
+    assert.equal(vault.optionDuration, duration);
     assert.equal(vault.feeRate, DEFAULT_FEE_RATE);
 
     assert.equal(vault.nonce, nonce);

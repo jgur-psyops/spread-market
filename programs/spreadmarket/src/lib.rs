@@ -14,6 +14,26 @@ use crate::instructions::*;
 pub mod spreadmarket {
     use super::*;
 
+    pub fn buy_spread(
+        ctx: Context<BuySpread>,
+        contracts: u64,
+        strike_lower: u64,
+        strike_upper: u64,
+        price_lower_threshold: u64,
+        price_upper_threshold: u64,
+        is_call: u8,
+    ) -> Result<()> {
+        instructions::buy_spread::buy_spread(
+            ctx,
+            contracts,
+            strike_lower,
+            strike_upper,
+            price_lower_threshold,
+            price_upper_threshold,
+            is_call,
+        )
+    }
+
     pub fn init_vault(
         ctx: Context<InitSpreadVault>,
         nonce: u16,
@@ -73,7 +93,15 @@ pub mod spreadmarket {
         )
     }
 
+    pub fn redeed_spread(ctx: Context<RedeemSpread>) -> Result<()> {
+        instructions::redeem_spread::redeem_spread(ctx)
+    }
+
     pub fn expire_market(ctx: Context<ExpireMarket>) -> Result<()> {
         instructions::expire_market::expire_market(ctx)
+    }
+
+    pub fn withdraw(ctx: Context<Withdraw>, amt: u64) -> Result<()> {
+        instructions::withdraw::withdraw(ctx, amt)
     }
 }

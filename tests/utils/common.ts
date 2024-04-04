@@ -14,6 +14,14 @@ export const SECONDS_PER_WEEK: number = 604800;
 export const FIVE_SECONDS: number = 5;
 /** 1%, as u32 */
 export const DEFAULT_FEE_RATE = Math.floor(u32MAX * 0.01);
+/** 6 */
+export const PRICE_DECIMALS: number = 6;
+/** 125% as u32 */
+export const VOLATILITY_DEFAULT: number = u32MAX * 1.25;
+/** 5% as u32 */
+export const RISK_FREE_DEFAULT: number = u32MAX * 0.05;
+export const CALL: number = 1;
+export const PUT: number = 2;
 
 /**
  * Convert a percentage that has been expressed as some number out of u32 max into a human readable

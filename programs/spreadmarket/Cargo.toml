@@ -32,4 +32,4 @@ bytemuck = { version = "1.7", features = ["derive"] }
 static_assertions = "1.1.0"
 psy-macros = "1.0.0"
 psyoracleutils = { version = "0.1.0", default-features = false, features = ["no-entrypoint"] }
-# black_scholes = "0.10.1"
+black_scholes = "0.10.1"

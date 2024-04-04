@@ -3,8 +3,7 @@ use crate::{
     state::{SpreadOption, PRICE_DECIMALS},
 };
 use anchor_lang::prelude::*;
-use anchor_spl::token::{Mint, Token, TokenAccount};
-use psyoracleutils::oracle_utils::{convert_price_decimals, get_oracle_price, load_pyth_price};
+use psyoracleutils::oracle_utils::get_oracle_price;
 
 use crate::state::{MarketEpoch, SpreadVault};
 
@@ -76,7 +75,7 @@ pub fn start_market_epoch(
 
     // TODO make confidence/age parameters configurable on the spread_vault
     #[cfg(feature = "localnet")]
-    let price = price_lower_threshold + price_upper_threshold / 2;
+    let price = (price_lower_threshold + price_upper_threshold) / 2;
     #[cfg(not(feature = "localnet"))]
     let price = get_oracle_price(
         &ctx.accounts.asset_oracle,
@@ -111,10 +110,10 @@ pub fn start_market_epoch(
     Ok(())
 }
 
+/// True if ascending order (ties allowed)
 pub fn is_ascending(arr: &[u64; 8]) -> bool {
     for i in 0..arr.len() - 1 {
         if arr[i] > arr[i + 1] {
-            // ties allowed
             return false;
         }
     }

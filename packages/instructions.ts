@@ -9,8 +9,60 @@ import {
   deriveLpMint,
   deriveMarketEpoch,
   derivePremiumsPool,
+  deriveSpreadReciept,
   deriveSpreadVault,
 } from "./pdas";
+
+export const buySpread = (
+  program: Program<Spreadmarket>,
+  payer: PublicKey,
+  owner: PublicKey,
+  spreadVault: PublicKey,
+  paymentAcc: PublicKey,
+  premiumsPool: PublicKey,
+  assetOracle: PublicKey,
+  contracts: BN,
+  strikeLower: BN,
+  strikeUpper: BN,
+  priceLowerThreshold: BN,
+  priceUpperThreshold: BN,
+  isCall: number
+) => {
+  const [spreadReciept] = deriveSpreadReciept(
+    program.programId,
+    owner,
+    spreadVault,
+    strikeLower,
+    strikeUpper,
+    isCall
+  );
+
+  const ix = program.methods
+    .buySpread(
+      contracts,
+      strikeLower,
+      strikeUpper,
+      priceLowerThreshold,
+      priceUpperThreshold,
+      isCall
+    )
+    .accounts({
+      payer: payer,
+      owner: owner,
+      spreadVault: spreadVault,
+      spreadReceipt: spreadReciept,
+      paymentAcc: paymentAcc,
+      premiumsPool: premiumsPool,
+      assetOracle: assetOracle,
+      
+      tokenProgram: TOKEN_PROGRAM_ID,
+      rent: SYSVAR_RENT_PUBKEY,
+      systemProgram: SystemProgram.programId,
+    })
+    .instruction();
+
+  return ix;
+};
 
 export const initSpreadVault = (
   program: Program<Spreadmarket>,

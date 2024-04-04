@@ -59,7 +59,9 @@ pub struct SpreadVault {
     pub bump: u8,
     _padding1: [u8; 3],
 
-    /// Information about this epoch's available Options for sale and current performance.
+    /// Information about this epoch's available Options for sale and current performance. Only one
+    /// set of Options is sold at a time. When a set expires, this part of the vault is over-written
+    /// to accomodate the next market epoch.
     pub sale_data: OptionSaleData,
 
     _reserved0: [u8; 16],
@@ -104,6 +106,31 @@ pub struct OptionSaleData {
     pub net_put_premiums: u64,
 
     _reserved1: [u8; 64],
+}
+
+impl OptionSaleData {
+    pub const LEN: usize = std::mem::size_of::<OptionSaleData>();
+
+    /// Returns the index of the spread option if ix exists, else None
+    pub fn get_spread_option_index(
+        &self,
+        is_call: bool,
+        strike_lower: u64,
+        strike_upper: u64,
+    ) -> Option<usize> {
+        let options = if is_call { self.calls } else { self.puts };
+        for i in 0..options.len() {
+            let opt = &options[i];
+
+            if opt.active != 0
+                && opt.strike_lower == strike_lower
+                && opt.strike_upper == strike_upper
+            {
+                return Some(i);
+            }
+        }
+        None
+    }
 }
 
 #[derive(AnchorSerialize, AnchorDeserialize, Clone, Copy, Zeroable, Pod)]

@@ -10,8 +10,8 @@ pub const PUT: u8 = 2;
 #[account(zero_copy)]
 #[repr(C)]
 pub struct SpreadReceipt {
-    /// The struct's own key. A PDA of `owner`, `spread_vault`, `strike_lower`, `strike_upper`, `is_call`, and
-    /// "receipt"
+    /// The struct's own key. A PDA of `owner`, `spread_vault`, `strike_lower`, `strike_upper`,
+    /// `is_call`, and "receipt"
     pub key: Pubkey,
     /// Owns this receipt
     pub owner: Pubkey,
@@ -20,13 +20,13 @@ pub struct SpreadReceipt {
     pub strike_lower: u64,
     /// The upper strike price in the option spread. Uses `PRICE_DECIMALS`
     pub strike_upper: u64,
-    /// Net premium paid for this option
+    /// Net premium paid for this option, in `payment_mint_decimals`
     pub premium_paid: u64,
     /// Unix timestamp when option expires
     pub expiration: i64,
     /// Number of contracts sold (1 contract controls 1 of the asset)
     pub volume: u64,
-    /// Max loss of this spread multiplied by the volume
+    /// Max loss of this spread multiplied by the volume, in `payment_mint_decimals`
     pub exposure: u64,
 
     /// See `CALL` and `PUT`

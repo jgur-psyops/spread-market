@@ -8,4 +8,10 @@ pub enum ErrorCode {
     StrikesOutofOrder, // 6001
     #[msg("Price exceeds threshold")]
     PriceExceedsThreshold, // 6002
+    #[msg("Risk free or Volatility not set")]
+    RiskFreeOrVolNotSet, // 6003
+    #[msg("Bad strikes passed")]
+    BadStrikesPassed, // 6004
+    #[msg("This market has expired")]
+    MarketExpired, // 6005
 }
