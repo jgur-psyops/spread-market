@@ -655,17 +655,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "clpcpi"
-version = "0.1.4"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f80aff438004581564f84f41e2320c6d59566b178b5cd0ebb59a620c5b24fc51"
-dependencies = [
- "anchor-lang",
- "anchor-spl",
- "bytemuck",
-]
-
-[[package]]
 name = "console_error_panic_hook"
 version = "0.1.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1232,18 +1221,6 @@ dependencies = [
  "keccak",
  "rand_core 0.6.4",
  "zeroize",
-]
-
-[[package]]
-name = "mocks"
-version = "0.1.0"
-dependencies = [
- "anchor-lang",
- "anchor-spl",
- "bytemuck",
- "clpcpi",
- "psy-macros",
- "static_assertions",
 ]
 
 [[package]]

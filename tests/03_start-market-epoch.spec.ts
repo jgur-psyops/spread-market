@@ -37,7 +37,6 @@ import {
 } from "./utils/common";
 import { program } from "@coral-xyz/anchor/dist/cjs/native/system";
 import { createMintToInstruction } from "@solana/spl-token";
-import { setupPythOracles } from "./utils/pythMocks";
 import { BN } from "bn.js";
 
 const verbose: boolean = true;
@@ -86,11 +85,13 @@ describe("Start Market", () => {
 
   it("Start an option market - happy path", async () => {
     let vaultAdmin = userState.vaultAdmin;
-    console.log("oracle: " + oracles.tokenAOracle.publicKey);
+
     let ix = await startMarket(
       program,
       callStrikes,
       putStrikes,
+      new BN(oracles.tokenAPrice * 10 ** 6), // TODOO price decimals const
+      new BN(oracles.tokenAPrice * 10 ** 6),
       0, // epoch starts at 0
       vaultAdmin.wallet.publicKey,
       spreadVault,

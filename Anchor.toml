@@ -6,7 +6,6 @@ skip-lint = false
 
 [programs.localnet]
 spreadmarket = "2MWAqfKiQ1BTtW6sdBaAWrS9GNjQm1ixdjvhYabuFZeH"
-mocks = "679cLtYwqwZfx73ofzcoQycam1uoWzYrJQumeKcBiz1D"
 
 [registry]
 url = "https://api.apr.dev"

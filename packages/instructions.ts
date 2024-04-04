@@ -153,6 +153,8 @@ export const startMarket = (
   program: Program<Spreadmarket>,
   callStrikes: BN[],
   putStrikes: BN[],
+  priceThresholdLower: BN,
+  priceThresholdUpper: BN,
   epoch: number,
   admin: PublicKey,
   spreadVault: PublicKey,
@@ -165,7 +167,12 @@ export const startMarket = (
   );
 
   const ix = program.methods
-    .startMarketEpoch(callStrikes, putStrikes)
+    .startMarketEpoch(
+      callStrikes,
+      putStrikes,
+      priceThresholdLower,
+      priceThresholdUpper
+    )
     .accounts({
       admin: admin,
       spreadVault: spreadVault,

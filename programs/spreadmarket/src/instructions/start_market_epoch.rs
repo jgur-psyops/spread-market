@@ -41,12 +41,12 @@ pub struct StartMarketEpoch<'info> {
     pub system_program: Program<'info, System>,
 }
 
-/// * Note: pass strikes in pairs, in ascending order. For example to open a 100/105 spread and a
-/// 105/110 spread, pass 0, 0, 0, 0, 100, 105, 105, 110
 pub fn start_market_epoch(
     ctx: Context<StartMarketEpoch>,
     call_strikes: [u64; 8],
     put_strikes: [u64; 8], // TODO support up to 8 positions (16 pairs)
+    price_lower_threshold: u64,
+    price_upper_threshold: u64,
 ) -> Result<()> {
     if !is_ascending(&call_strikes) || !is_ascending(&put_strikes) {
         return err!(ErrorCode::StrikesOutofOrder);
@@ -75,26 +75,22 @@ pub fn start_market_epoch(
     }
 
     // TODO make confidence/age parameters configurable on the spread_vault
-    // let price = get_oracle_price(
-    //     &ctx.accounts.asset_oracle,
-    //     PRICE_DECIMALS,
-    //     current_time,
-    //     Some(u32::MAX / 50), // 2%
-    //     Some(5_000_000.0),
-    //     10, // 10 seconds
-    //     true,
-    // )?;
-
-    msg!("size: {:?}", ctx.accounts.asset_oracle.data_len());
-    let (pyth_price, expo) =
-        load_pyth_price(&ctx.accounts.asset_oracle, current_time, u32::MAX / 50, 10)?;
-
-    let price = convert_price_decimals(
-        i128::from(pyth_price),
-        expo.unsigned_abs(),
+    #[cfg(feature = "localnet")]
+    let price = price_lower_threshold + price_upper_threshold / 2;
+    #[cfg(not(feature = "localnet"))]
+    let price = get_oracle_price(
+        &ctx.accounts.asset_oracle,
         PRICE_DECIMALS,
+        current_time,
+        Some(u32::MAX / 50), // 2%
+        Some(5_000_000.0),
+        10, // 10 seconds
         true,
     )?;
+    #[cfg(not(feature = "localnet"))]
+    if price < price_lower_threshold || price > price_upper_threshold {
+        return err!(ErrorCode::PriceExceedsThreshold);
+    }
 
     spread_vault.sale_data.price_at_start = price;
     spread_vault.sale_data.expiration = current_time + spread_vault.option_duration as i64;

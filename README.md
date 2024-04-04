@@ -21,14 +21,14 @@ Option buyers typically profit when they guess the asset's price direction corre
 
 The LP has 1000 in funding. It sells calls against the asset at 105/110 and puts at 90/95. The calls and puts both cost 1.
 
-Buyers purchase 200 calls and 150 puts. The vault earns 450 in premiums. All the collateral on the call side has been consumed. The put side has 1000 - 150 \* 5 (the max loss) = 250 collateral remaining (it can sell 50 more puts), so the LP has some delta exposure in this scenario.
+Buyers purchase 200 calls and 150 puts. The vault earns 350 in premiums. All the collateral on the call side has been consumed. The put side has 1000 - 150 \* 5 (the max loss) = 250 collateral remaining (it can sell 50 more puts), so the LP has some delta exposure in this scenario.
 
 Let's look at what happens at different price points when the options expire:
 
-- If the price ends at 100, the LP makes 450 and all buyers make nothing. The LP now has 1450.
-- If the price ends above 105, the LP loses 1000, but keeps the premium. The LP now has 450. Call buyers gain 1000 (a profit of 800)
-- If the price ends below 90, the LP loses (150 \* 5) = 750, but keeps the premium. The LP now has 700. Put buyers gain 750 (a profit of 600)
-- At prices in between, e.g. 102, the LP loses some proportion. At 102, the LP loses 200 \* 2 = 400. After the premium, the LP still has 1050 in this scenario, but call buyers also profit by 200.
+- If the price ends at 100, the LP makes 350 and all buyers make nothing. The LP now has 1350.
+- If the price ends above 105, the LP loses 1000, but keeps the premium. The LP now has 350. Call buyers gain 1000 (a profit of 800)
+- If the price ends below 90, the LP loses (150 \* 5) = 750, but keeps the premium. The LP now has 600. Put buyers gain 750 (a profit of 600)
+- At prices in between, e.g. 102, the LP loses some proportion. At 102, the LP loses 200 \* 2 = 400. After the premium, the LP still has 950 in this scenario, but call buyers also profit by 200.
 
 ## HOW DOES THE VAULT AVOID DELTA EXPOSURE
 
@@ -36,13 +36,13 @@ The vault tries to keep its call side and put side balanced to create a condor-l
 
 ## WHY BUY A SPREAD INSTEAD OF A PERP
 
-Spreads are an all-or-nothing bet that an asset will move in a direction by a certain time. Leverage for these positions is far higher than can be typically obtained in perps. Consider the example above, where a call spread buyer controls an asset worth 100 for just 1 token in premium. If the price ends above 105, they earn 5 tokens, a profit of 400\%.
+Spreads are an all-or-nothing bet that an asset will move in a direction by a certain time. Leverage for these positions is far higher than can be typically obtained in perps. Consider the example above, where a call spread buyer controls an asset worth 100 for just 1 token in premium. If the price ends above 105, they earn 5 tokens, a profit of 400\%. A spread with that level of leverage could be wiped out by tiny movements in the other direction.
 
 Buyers seeking high delta exposure may prefer spreads over perps. Volatility traders may also buy both sides, e.g. buy both the call and put side (essentially forming a strangle), a trade that is harder to manage with perps.
 
 The key advantage vs perps is that perps require maintenance and have a chance to be liquidated. Spreads are purchased once and are safe until expiry. After expiration, they can be redeemed any time, making them more fire-and-forget for traders that don't want to actively manage positions every day. Spreads are also cash-settled for both LPs and buyers, so you only need to hold stablecoin, which avoids some common de-pegging and smart contract risks.
 
-The downside is that spreads earn nothing unless the asset finishes in-the-money.
+The downside, of course, is that spreads earn nothing unless the asset expires in-the-money.
 
 ## WHAT DOES THE ADMINISTRATOR CONTROL
 

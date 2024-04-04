@@ -49,12 +49,28 @@ pub mod spreadmarket {
         instructions::deposit::deposit(ctx, amount)
     }
 
+    /// Start the sale of options. The sale begins when this ix fires, and options expire at now +
+    /// spread_vault.option_duration
+    /// * call/put_strikes - pass strikes in pairs, in ascending order, padded with zeros. For
+    /// example to open a 100/105 spread and a 105/110 spread, pass [0, 0, 0, 0, 100, 105, 105, 110]
+    /// * price_lower/upper_threshold - If on devnet/localnet, the price is always set to
+    ///   (price_lower_threshold + price_upper_threshold) / 2 and the oracle is ignored. On mainnet,
+    /// if the oracle's price is below/above these thresholds respectively, the ix fails. In
+    /// `PRICE_DECIMALS`. Pass 0/u64::MAX to ignore these checks.
     pub fn start_market_epoch(
         ctx: Context<StartMarketEpoch>,
         call_strikes: [u64; 8],
         put_strikes: [u64; 8],
+        price_lower_threshold: u64,
+        price_upper_threshold: u64,
     ) -> Result<()> {
-        instructions::start_market_epoch::start_market_epoch(ctx, call_strikes, put_strikes)
+        instructions::start_market_epoch::start_market_epoch(
+            ctx,
+            call_strikes,
+            put_strikes,
+            price_lower_threshold,
+            price_upper_threshold,
+        )
     }
 
     pub fn expire_market(ctx: Context<ExpireMarket>) -> Result<()> {

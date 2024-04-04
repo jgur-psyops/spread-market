@@ -29,7 +29,6 @@ import {
   FIVE_SECONDS,
 } from "./utils/common";
 import { createMintToInstruction } from "@solana/spl-token";
-import { setupPythOracles } from "./utils/pythMocks";
 
 const verbose: boolean = true;
 
@@ -60,8 +59,6 @@ describe("Init Spreadmarket", () => {
     }
 
     await createMockUsers();
-
-    await initOracles();
   });
 
   it("Init new spread vault - happy path", async () => {
@@ -204,33 +201,5 @@ describe("Init Spreadmarket", () => {
     );
 
     await program.provider.sendAndConfirm(tx);
-  };
-
-  const initOracles = async () => {
-    await setupPythOracles(
-      wallet,
-      oracles.wsolPrice,
-      oracles.wsolDecimals,
-      oracles.usdcPrice,
-      oracles.usdcDecimals,
-      oracles.tokenAPrice,
-      oracles.tokenADecimals,
-      oracles.tokenBPrice,
-      oracles.tokenBDecimals,
-      verbose,
-      {
-        wsol: oracles.wsolOracle,
-        usdc: oracles.usdcOracle,
-        a: oracles.tokenAOracle,
-        b: oracles.tokenBOracle,
-      },
-      {
-        // Skip setting up wsol/b for test performance
-        wsol: true,
-        usdc: false,
-        a: false,
-        b: true,
-      }
-    );
   };
 });

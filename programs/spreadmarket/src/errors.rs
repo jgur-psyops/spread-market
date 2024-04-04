@@ -6,4 +6,6 @@ pub enum ErrorCode {
     MathErr, // 6000
     #[msg("Strikes must be in ascending order")]
     StrikesOutofOrder, // 6001
+    #[msg("Price exceeds threshold")]
+    PriceExceedsThreshold, // 6002
 }
