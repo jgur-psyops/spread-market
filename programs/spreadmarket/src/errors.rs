@@ -14,4 +14,6 @@ pub enum ErrorCode {
     BadStrikesPassed, // 6004
     #[msg("This market has expired")]
     MarketExpired, // 6005
+    #[msg("Exceeded max exposure")]
+    ExceededMaxExposure, // 6006
 }

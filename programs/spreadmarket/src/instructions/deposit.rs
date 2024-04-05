@@ -8,6 +8,7 @@ pub struct Deposit<'info> {
     pub user: Signer<'info>,
 
     #[account(
+        mut,
         has_one = payment_mint,
         has_one = lp_mint,
         has_one = funding_pool
@@ -33,6 +34,14 @@ pub struct Deposit<'info> {
 }
 
 pub fn deposit(ctx: Context<Deposit>, amount: u64) -> Result<()> {
+    {
+        let mut spread_vault = ctx.accounts.spread_vault.load_mut()?;
+        spread_vault.free_funds = spread_vault
+            .free_funds
+            .checked_add(amount)
+            .ok_or(ErrorCode::MathErr)?;
+    } // release mutable spread vault
+    let spread_vault = ctx.accounts.spread_vault.load()?;
 
     // Transfer the payment from the user's account to the funding pool
     let cpi_accounts = Transfer {
@@ -52,7 +61,7 @@ pub fn deposit(ctx: Context<Deposit>, amount: u64) -> Result<()> {
     } else {
         // Calculated based on the ratio of deposit to total funding pool after deposit
         // Updated pool size after deposit
-        let total_pool = ctx.accounts.funding_pool.amount + amount;
+        let total_pool = ctx.accounts.funding_pool.amount - spread_vault.realized_loss + amount;
         // Ratio of user's deposit amount to updated pool size, scaled by total LP tokens
         amount
             .checked_mul(lp_tokens)
@@ -62,7 +71,6 @@ pub fn deposit(ctx: Context<Deposit>, amount: u64) -> Result<()> {
     };
 
     // Mint LP tokens
-    let spread_vault = ctx.accounts.spread_vault.load()?;
     let seeds = spread_vault_signer_seeds!(spread_vault);
     let signer_seeds = &[&seeds[..]];
 

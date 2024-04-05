@@ -175,19 +175,35 @@ pub fn buy_spread(
         *net_premiums = net_premiums.saturating_add(net_cost);
     } // release mutable borrow of spread_vault.
 
-    let options = if is_call {
-        &mut spread_vault.sale_data.calls
-    } else {
-        &mut spread_vault.sale_data.puts
-    };
-
-    let net_vol = options[option_index]
-        .volume_sold
-        .checked_add(contracts)
-        .ok_or(ErrorCode::MathErr)?;
+    let free_funds = spread_vault.free_funds;
     let strike_diff = strike_upper - strike_lower;
-    options[option_index].volume_sold = net_vol;
-    options[option_index].exposure = net_vol.checked_mul(strike_diff).ok_or(ErrorCode::MathErr)?;
+    let net_exposure: u64;
+    {
+        let options = if is_call {
+            &mut spread_vault.sale_data.calls
+        } else {
+            &mut spread_vault.sale_data.puts
+        };
+
+        let net_vol = options[option_index]
+            .volume_sold
+            .checked_add(contracts)
+            .ok_or(ErrorCode::MathErr)?;
+        options[option_index].volume_sold = net_vol;
+        net_exposure = net_vol.checked_mul(strike_diff).ok_or(ErrorCode::MathErr)?;
+        options[option_index].exposure = net_exposure;
+    } // release mutable borrow of spread_vault
+
+    if net_exposure > free_funds {
+        msg!(
+            "tried to purchase: {:?} max exposure is: {:?}",
+            net_exposure,
+            free_funds
+        );
+        return err!(ErrorCode::ExceededMaxExposure);
+    } else {
+        spread_vault.free_funds = free_funds - net_exposure;
+    }
 
     let mut spread_receipt = ctx.accounts.spread_receipt.load_init()?;
     spread_receipt.key = ctx.accounts.spread_receipt.key();

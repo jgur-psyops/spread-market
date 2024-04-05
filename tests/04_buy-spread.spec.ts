@@ -61,7 +61,7 @@ describe("Buy Spreads", () => {
   let marketEpoch: PublicKey;
   const nonce: number = 0;
   const epoch: number = 0;
-  const contracts = 100;
+  const contracts = 10;
   const tokenPrice = new BN(oracles.tokenAPrice * 10 ** PRICE_DECIMALS);
   const strikeLower = 105 * 10 ** PRICE_DECIMALS;
   const strikeUpper = 110 * 10 ** PRICE_DECIMALS;

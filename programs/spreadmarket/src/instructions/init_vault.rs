@@ -58,6 +58,8 @@ pub fn init_spread_vault(
     spread_vault.fee_pool = Pubkey::default();
     spread_vault.asset_oracle = asset_oracle;
 
+    spread_vault.free_funds = 0;
+    spread_vault.realized_loss = 0;
     spread_vault.volatility = 0;
     spread_vault.risk_free_rate = 0;
     spread_vault.fee_rate = fee_rate;

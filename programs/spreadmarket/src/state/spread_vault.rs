@@ -37,6 +37,12 @@ pub struct SpreadVault {
     /// trusted implicitly to be the correct oracle for the asset.
     pub asset_oracle: Pubkey,
 
+    /// Amount lost in previous rounds of options, but not yet claimed by buyers.
+    /// * In `payment_mint_decimals`
+    pub realized_loss: u64,
+    /// Funds not collateralized by any option, aka the remaining max exposure of the vault.
+    /// * In `payment_mint_decimals`
+    pub free_funds: u64,
     /// Implied Volatility (IV) for `asset_mint`
     /// * A %, as u32, e.g. 50% = u32MAX / 2.
     /// * Supports values above 100% (e.g. u32MAX * 2 is 200%)

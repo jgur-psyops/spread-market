@@ -19,6 +19,7 @@ import {
 } from "@solana/spl-token";
 import { getTokenBalance } from "./utils/common";
 import { assert } from "chai";
+import { assertBNEqual } from "./utils/genericTests";
 
 const verbose: boolean = true;
 
@@ -33,8 +34,8 @@ describe("Deposit", () => {
 
   let spreadVault: PublicKey;
   const nonce = 0;
-  let initialDeposit = 10 * 10 ** ecosystem.usdcDecimals;
-  let secondDeposit = 5 * 10 ** ecosystem.usdcDecimals;
+  let initialDeposit = 100 * 10 ** ecosystem.usdcDecimals;
+  let secondDeposit = 50 * 10 ** ecosystem.usdcDecimals;
 
   before(async () => {
     await createMintsIfNeeded(wallet.publicKey, provider, ecosystem);
@@ -107,6 +108,8 @@ describe("Deposit", () => {
     assert.equal(userUsdcBefore - userUsdcAfter, initialDeposit);
     assert.equal(vaultUsdcAfter - vaultUsdcBefore, initialDeposit);
     assert.equal(amtLpAfter - amtLpBefore, initialDeposit);
+    spreadVaultAcc = await program.account.spreadVault.fetch(spreadVault);
+    assertBNEqual(spreadVaultAcc.freeFunds, initialDeposit);
   });
 
   it("(user 1) deposit into vault with existing assets", async () => {
@@ -179,5 +182,7 @@ describe("Deposit", () => {
     );
     assert.equal(amtLpAfter - amtLpBefore, expectedLpMinted);
     assert.equal(lpMintSupplyAfter, lpMintSupplyBefore + expectedLpMinted);
+    spreadVaultAcc = await program.account.spreadVault.fetch(spreadVault);
+    assertBNEqual(spreadVaultAcc.freeFunds, initialDeposit + secondDeposit);
   });
 });
