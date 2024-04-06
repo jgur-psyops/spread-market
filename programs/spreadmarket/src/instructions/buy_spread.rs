@@ -3,10 +3,9 @@ use crate::utils::{ten_pow, SECONDS_PER_YEAR};
 use anchor_lang::prelude::*;
 use anchor_spl::token::{self, Token, TokenAccount, Transfer};
 use psyoracleutils::oracle_utils::get_oracle_price;
-use spread_receipt::{CALL, PUT};
 
 use crate::errors::ErrorCode;
-use crate::state::{MarketEpoch, SpreadVault};
+use crate::state::SpreadVault;
 
 #[derive(Accounts)]
 #[instruction(
@@ -31,9 +30,8 @@ pub struct BuySpread<'info> {
     )]
     pub spread_vault: AccountLoader<'info, SpreadVault>,
 
-    // TODO support adding to an existing position
     #[account(
-        init,
+        mut,
         seeds = [
             owner.key().as_ref(),
             spread_vault.key().as_ref(),
@@ -42,9 +40,7 @@ pub struct BuySpread<'info> {
             &is_call.to_le_bytes(),
             b"receipt",
         ],
-        bump,
-        payer = payer,
-        space = 8 + SpreadReceipt::LEN,
+        bump
     )]
     pub spread_receipt: AccountLoader<'info, SpreadReceipt>,
 
@@ -205,19 +201,23 @@ pub fn buy_spread(
         spread_vault.free_funds = free_funds - net_exposure;
     }
 
-    let mut spread_receipt = ctx.accounts.spread_receipt.load_init()?;
-    spread_receipt.key = ctx.accounts.spread_receipt.key();
-    spread_receipt.owner = ctx.accounts.owner.key();
-    spread_receipt.strike_lower = strike_lower;
-    spread_receipt.strike_upper = strike_upper;
-    spread_receipt.premium_paid = net_cost;
-    spread_receipt.expiration = spread_vault.sale_data.expiration;
-    spread_receipt.volume = contracts;
-    spread_receipt.exposure = contracts
-        .checked_mul(strike_diff)
+    let mut spread_receipt = ctx.accounts.spread_receipt.load_mut()?;
+    spread_receipt.premium_paid = spread_receipt
+        .premium_paid
+        .checked_add(net_cost)
         .ok_or(ErrorCode::MathErr)?;
-    spread_receipt.is_call = if is_call { CALL } else { PUT };
-    spread_receipt.bump = *ctx.bumps.get("spread_receipt").unwrap();
+    spread_receipt.volume = spread_receipt
+        .volume
+        .checked_add(contracts)
+        .ok_or(ErrorCode::MathErr)?;
+    spread_receipt.exposure = spread_receipt
+        .exposure
+        .checked_add(
+            contracts
+                .checked_mul(strike_diff)
+                .ok_or(ErrorCode::MathErr)?,
+        )
+        .ok_or(ErrorCode::MathErr)?;
 
     Ok(())
 }

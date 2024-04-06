@@ -1,6 +1,8 @@
 pub mod buy_spread;
 pub mod deposit;
+pub mod end_market_epoch;
 pub mod expire_market;
+pub mod init_receipt;
 pub mod init_vault;
 pub mod init_vault_accs_p1;
 pub mod init_vault_accs_p2;
@@ -11,7 +13,9 @@ pub mod withdraw;
 
 pub use buy_spread::*;
 pub use deposit::*;
+pub use end_market_epoch::*;
 pub use expire_market::*;
+pub use init_receipt::*;
 pub use init_vault::*;
 pub use init_vault_accs_p1::*;
 pub use init_vault_accs_p2::*;

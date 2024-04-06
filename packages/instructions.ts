@@ -13,6 +13,51 @@ import {
   deriveSpreadVault,
 } from "./pdas";
 
+/**
+ * Called before the first purchase on any vault at a given strke pair.
+ * @param program 
+ * @param payer 
+ * @param owner 
+ * @param spreadVault 
+ * @param strikeLower 
+ * @param strikeUpper 
+ * @param isCall 
+ * @returns 
+ */
+export const initReceipt = (
+  program: Program<Spreadmarket>,
+  payer: PublicKey,
+  owner: PublicKey,
+  spreadVault: PublicKey,
+  strikeLower: BN,
+  strikeUpper: BN,
+  isCall: number
+) => {
+  const [spreadReciept] = deriveSpreadReciept(
+    program.programId,
+    owner,
+    spreadVault,
+    strikeLower,
+    strikeUpper,
+    isCall
+  );
+
+  const ix = program.methods
+    .initReceipt(strikeLower, strikeUpper, isCall)
+    .accounts({
+      payer: payer,
+      owner: owner,
+      spreadVault: spreadVault,
+      spreadReceipt: spreadReciept,
+
+      rent: SYSVAR_RENT_PUBKEY,
+      systemProgram: SystemProgram.programId,
+    })
+    .instruction();
+
+  return ix;
+};
+
 export const buySpread = (
   program: Program<Spreadmarket>,
   payer: PublicKey,
@@ -54,7 +99,7 @@ export const buySpread = (
       paymentAcc: paymentAcc,
       premiumsPool: premiumsPool,
       assetOracle: assetOracle,
-      
+
       tokenProgram: TOKEN_PROGRAM_ID,
       rent: SYSVAR_RENT_PUBKEY,
       systemProgram: SystemProgram.programId,

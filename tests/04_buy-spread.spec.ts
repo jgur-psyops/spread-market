@@ -3,6 +3,7 @@ import { Program } from "@coral-xyz/anchor";
 import { Spreadmarket } from "../target/types/spreadmarket";
 import {
   buySpread,
+  initReceipt,
   initSpreadVault,
   initSpreadVaultAccs,
   startMarket,
@@ -85,7 +86,16 @@ describe("Buy Spreads", () => {
     const [premiumsPool] = derivePremiumsPool(program.programId, spreadVault);
 
     let now = new Date().getTime() / 1000;
-    let ix = await buySpread(
+    let initIx = await initReceipt(
+      program,
+      user0.wallet.publicKey,
+      user0.wallet.publicKey,
+      spreadVault,
+      new BN(strikeLower),
+      new BN(strikeUpper),
+      CALL
+    );
+    let buyIx = await buySpread(
       program,
       user0.wallet.publicKey,
       user0.wallet.publicKey,
@@ -100,13 +110,11 @@ describe("Buy Spreads", () => {
       tokenPrice,
       CALL
     );
-    try {
-      await user0.userSpreadProgram.provider.sendAndConfirm(
-        new Transaction().add(ix)
-      );
-    } catch (err) {
-      console.log(err);
-    }
+
+    await user0.userSpreadProgram.provider.sendAndConfirm(
+      new Transaction().add(initIx, buyIx)
+    );
+
     const [marketEpoch] = deriveMarketEpoch(
       program.programId,
       spreadVault,
@@ -168,6 +176,92 @@ describe("Buy Spreads", () => {
     assertBNEqual(receipt.strikeUpper, strikeUpper);
     assert.equal(receipt.isCall, CALL);
     assert.equal(receipt.bump, bump);
+
+    // TODO assert cost approximately with off-chain BS....
+  });
+
+  it("Add to a spread purchase - happy path", async () => {
+    let user0 = userState.users[0];
+    let vaultBefore = await program.account.spreadVault.fetch(spreadVault);
+    let userUsdcBefore = await getTokenBalance(provider, user0.usdcAccount);
+
+    const [premiumsPool] = derivePremiumsPool(program.programId, spreadVault);
+
+    let now = new Date().getTime() / 1000;
+    let buyIx = await buySpread(
+      program,
+      user0.wallet.publicKey,
+      user0.wallet.publicKey,
+      spreadVault,
+      user0.usdcAccount,
+      premiumsPool,
+      oracles.tokenAOracle.publicKey,
+      new BN(contracts),
+      new BN(strikeLower),
+      new BN(strikeUpper),
+      tokenPrice,
+      tokenPrice,
+      CALL
+    );
+
+    await user0.userSpreadProgram.provider.sendAndConfirm(
+      new Transaction().add(buyIx)
+    );
+
+    const [marketEpoch] = deriveMarketEpoch(
+      program.programId,
+      spreadVault,
+      epoch
+    );
+
+    const [spreadReciept, bump] = deriveSpreadReciept(
+      program.programId,
+      user0.wallet.publicKey,
+      spreadVault,
+      new BN(strikeLower),
+      new BN(strikeUpper),
+      CALL
+    );
+
+    let vault = await program.account.spreadVault.fetch(spreadVault);
+    let receipt = await program.account.spreadReceipt.fetch(spreadReciept);
+    let userUsdcAfter = await getTokenBalance(provider, user0.usdcAccount);
+    let usdcDiff = userUsdcBefore - userUsdcAfter;
+
+    if (verbose) {
+      console.log("Buy " + contracts + " from " + marketEpoch);
+      console.log(
+        " Purchased: " +
+          contracts +
+          " contracts for " +
+          usdcDiff.toLocaleString() +
+          " ($" +
+          usdcDiff / 10 ** ecosystem.usdcDecimals +
+          ")"
+      );
+    }
+    assertBNEqual(
+      vault.saleData.netCallPremiums,
+      vaultBefore.saleData.netCallPremiums.toNumber() + usdcDiff
+    );
+    // No change
+    assertBNEqual(
+      vaultBefore.saleData.netPutPremiums,
+      vault.saleData.netPutPremiums
+    );
+    let optionBefore = vaultBefore.saleData.calls[0];
+    let optionAfter = vault.saleData.calls[0];
+    let strikeDiff = strikeUpper - strikeLower;
+    assertBNEqual(
+      optionAfter.volumeSold,
+      optionBefore.volumeSold.toNumber() + contracts
+    );
+    assertBNEqual(receipt.volume, contracts * 2);
+    assertBNEqual(
+      optionAfter.exposure,
+      optionBefore.exposure.toNumber() + contracts * strikeDiff
+    );
+    assertBNEqual(receipt.exposure, contracts * strikeDiff * 2);
 
     // TODO assert cost approximately with off-chain BS....
   });

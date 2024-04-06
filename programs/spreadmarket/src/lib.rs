@@ -34,6 +34,15 @@ pub mod spreadmarket {
         )
     }
 
+    pub fn init_receipt(
+        ctx: Context<InitReceipt>,
+        strike_lower: u64,
+        strike_upper: u64,
+        is_call: u8,
+    ) -> Result<()> {
+        instructions::init_receipt::init_receipt(ctx, strike_lower, strike_upper, is_call)
+    }
+
     pub fn init_vault(
         ctx: Context<InitSpreadVault>,
         nonce: u16,
@@ -93,12 +102,16 @@ pub mod spreadmarket {
         )
     }
 
-    pub fn redeed_spread(ctx: Context<RedeemSpread>) -> Result<()> {
+    pub fn redeem_spread(ctx: Context<RedeemSpread>) -> Result<()> {
         instructions::redeem_spread::redeem_spread(ctx)
     }
 
     pub fn expire_market(ctx: Context<ExpireMarket>) -> Result<()> {
         instructions::expire_market::expire_market(ctx)
+    }
+
+    pub fn end_market_epoch(ctx: Context<EndMarketEpoch>) -> Result<()> {
+        instructions::end_market_epoch::end_market_epoch(ctx)
     }
 
     pub fn withdraw(ctx: Context<Withdraw>, amt: u64) -> Result<()> {
