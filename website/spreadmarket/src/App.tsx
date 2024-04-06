@@ -10,30 +10,54 @@ import {
 } from "@solana/wallet-adapter-react-ui";
 import { clusterApiUrl } from "@solana/web3.js";
 import "./App.css";
-
-// Default styles that can be overridden by your app
+import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import AdminPage from "./pages/AdminPage";
+import VaultListPage from "./pages/VaultList";
 import "@solana/wallet-adapter-react-ui/styles.css";
+import LpPage from "./pages/LpPage";
+import BuyerPage from "./pages/BuyerPage";
 
 function App() {
-  // The network can be set to 'devnet', 'testnet', or 'mainnet-beta'.
   const network = WalletAdapterNetwork.Devnet;
-  // You can also provide a custom RPC endpoint.
   const endpoint = useMemo(() => clusterApiUrl(network), [network]);
 
-  const wallets = useMemo(
-    () => [
-      // if desired, manually define specific/custom wallets here (normally not required)
-      // otherwise, the wallet-adapter will auto detect the wallets a user's browser has available
-    ],
-    [network]
-  );
+  // Define wallets supported by your application
+  const wallets = useMemo(() => [], [network]);
 
   return (
     <ConnectionProvider endpoint={endpoint}>
       <WalletProvider wallets={wallets} autoConnect>
         <WalletModalProvider>
-          <WalletMultiButton />
-          <h1>Hello Solana</h1>
+          <BrowserRouter>
+            <div>
+              {/* Navbar here.. */}
+              <nav>
+                <ul>
+                  <li>
+                    <Link to="/">Home</Link>
+                  </li>
+                  <li>
+                    <Link to="/adminPage">Admin Page</Link>
+                  </li>
+                  <li>
+                    <Link to="/vaultList">Vault List</Link>
+                  </li>
+                </ul>
+                <div className="wallet-button-container">
+                  <WalletMultiButton />
+                </div>
+              </nav>
+            </div>
+
+            {/* Routes here... */}
+            <Routes>
+              <Route path="/" element={<h1>LANDING PAGE PLACEHOLDER</h1>} />
+              <Route path="/adminPage" element={<AdminPage />} />
+              <Route path="/vaultList" element={<VaultListPage />} />
+              <Route path="/lp/:publicKey" element={<LpPage />} />
+              <Route path="/buyer/:publicKey" element={<BuyerPage />} />
+            </Routes>
+          </BrowserRouter>
         </WalletModalProvider>
       </WalletProvider>
     </ConnectionProvider>

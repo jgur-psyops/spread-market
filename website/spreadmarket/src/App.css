@@ -1,42 +1,80 @@
+/*
+  Color Palette (use find and replace to change, we aren't fancy css wizards here)
+  background: #66646b
+  dark acc: #af5947
+  light acc: #9c9398
+  main: #e99c71
+  light: #f2f2ee
+*/
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #66646b; 
+  color: #e99c71; 
+}
+
 #root {
   max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
+  background: transparent;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
-
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* Navbar fixed to the top of the viewport */
+nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: #af5947; 
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Adds a shadow for some depth */
+  z-index: 1000; /* Ensure the navbar is above other content */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+/* Nav bar items */
+nav ul {
+  display: flex;
+  margin: 0;
+  padding: 0.5rem 2rem;
+  list-style-type: none;
+  text-align: center;
+  align-items: center;
+}
+nav li {
+  display: inline;
+  text-decoration: none;
+  color: #f2f2ee; 
+  margin: 0 1em;
+}
+nav li a {
+  text-decoration: none;
+  color: #f2f2ee;  
+  padding: 0.5rem 1rem; 
+  border: 2px solid transparent; 
+  border-radius: 4px; 
 }
 
-.card {
-  padding: 2em;
+.wallet-button-container .wallet-adapter-button {
+  background-color: #af5947; 
+  color: #f2f2ee; 
 }
 
-.read-the-docs {
-  color: #888;
+  /* Stupid hack to hide the phantom logo */
+.wallet-button-container .wallet-adapter-button .phantom-logo,
+.wallet-button-container .wallet-adapter-button img {
+  display: none !important;
+}
+.wallet-button-container .wallet-adapter-button::before {
+  content: '';
+  display: block;
+  width: 2vmin; 
+  height: 2vmin; 
+  background-image: url('assets/wallet.svg');
+  background-size: cover;
+  background-repeat: no-repeat;
 }
