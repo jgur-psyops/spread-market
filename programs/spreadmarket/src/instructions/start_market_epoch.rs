@@ -102,11 +102,6 @@ pub fn start_market_epoch(
     market_epoch.bump = *ctx.bumps.get("market_epoch").unwrap();
     market_epoch.is_expired = 0;
 
-    spread_vault.epoch = spread_vault
-        .epoch
-        .checked_add(1)
-        .ok_or(ErrorCode::MathErr)?;
-
     Ok(())
 }
 

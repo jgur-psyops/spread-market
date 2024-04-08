@@ -16,4 +16,6 @@ pub enum ErrorCode {
     MarketExpired, // 6005
     #[msg("Exceeded max exposure")]
     ExceededMaxExposure, // 6006
+    #[msg("Not yet expired!")]
+    SpreadNotExpired, // 6007
 }

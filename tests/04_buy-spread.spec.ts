@@ -108,12 +108,16 @@ describe("Buy Spreads", () => {
       new BN(strikeUpper),
       tokenPrice,
       tokenPrice,
-      CALL
+      CALL,
     );
 
+    try{
     await user0.userSpreadProgram.provider.sendAndConfirm(
       new Transaction().add(initIx, buyIx)
     );
+  }catch(err){
+    console.log(err);
+  }
 
     const [marketEpoch] = deriveMarketEpoch(
       program.programId,
@@ -163,7 +167,7 @@ describe("Buy Spreads", () => {
       optionAfter.volumeSold,
       optionBefore.volumeSold.toNumber() + contracts
     );
-    assertBNEqual(receipt.volume, contracts);
+    assertBNEqual(receipt.contracts, contracts);
     assertBNEqual(
       optionAfter.exposure,
       optionBefore.exposure.toNumber() + contracts * strikeDiff
@@ -174,6 +178,7 @@ describe("Buy Spreads", () => {
     assertKeysEqual(receipt.owner, user0.wallet.publicKey);
     assertBNEqual(receipt.strikeLower, strikeLower);
     assertBNEqual(receipt.strikeUpper, strikeUpper);
+    assert.equal(receipt.epoch, epoch);
     assert.equal(receipt.isCall, CALL);
     assert.equal(receipt.bump, bump);
 
@@ -214,7 +219,7 @@ describe("Buy Spreads", () => {
       epoch
     );
 
-    const [spreadReciept, bump] = deriveSpreadReciept(
+    const [spreadReciept] = deriveSpreadReciept(
       program.programId,
       user0.wallet.publicKey,
       spreadVault,
@@ -256,7 +261,7 @@ describe("Buy Spreads", () => {
       optionAfter.volumeSold,
       optionBefore.volumeSold.toNumber() + contracts
     );
-    assertBNEqual(receipt.volume, contracts * 2);
+    assertBNEqual(receipt.contracts, contracts * 2);
     assertBNEqual(
       optionAfter.exposure,
       optionBefore.exposure.toNumber() + contracts * strikeDiff

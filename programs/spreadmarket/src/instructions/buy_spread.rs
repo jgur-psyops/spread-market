@@ -1,4 +1,4 @@
-use crate::state::{spread_receipt, SpreadReceipt, PRICE_DECIMALS};
+use crate::state::{SpreadReceipt, PRICE_DECIMALS};
 use crate::utils::{ten_pow, SECONDS_PER_YEAR};
 use anchor_lang::prelude::*;
 use anchor_spl::token::{self, Token, TokenAccount, Transfer};
@@ -150,6 +150,8 @@ pub fn buy_spread(
         .ok_or(ErrorCode::MathErr)?
         .try_into()
         .unwrap();
+
+    // TODO increase cost based on vault balance
 
     // Transfer the payment from the user's account to the funding pool
     let cpi_accounts = Transfer {

@@ -34,6 +34,8 @@ pub mod spreadmarket {
         )
     }
 
+    /// Must run before a spread with the given strikes can be purchased. The strike pairs must
+    /// match an offering on the spread_vault.
     pub fn init_receipt(
         ctx: Context<InitReceipt>,
         strike_lower: u64,
@@ -43,6 +45,7 @@ pub mod spreadmarket {
         instructions::init_receipt::init_receipt(ctx, strike_lower, strike_upper, is_call)
     }
 
+    /// (Admin only) Initialize a new vault for some asset.
     pub fn init_vault(
         ctx: Context<InitSpreadVault>,
         nonce: u16,
@@ -63,23 +66,27 @@ pub mod spreadmarket {
         )
     }
 
+    /// (Admin only) Initial bootstrapping, run after `init_vault`
     pub fn init_vault_accs_p1(ctx: Context<InitVaultAccsP1>) -> Result<()> {
         instructions::init_vault_accs_p1::init_vault_accs_p1(ctx)
     }
+    /// (Admin only) Initial bootstrapping, run after `init_vault`
     pub fn init_vault_accs_p2(ctx: Context<InitVaultAccsP2>) -> Result<()> {
         instructions::init_vault_accs_p2::init_vault_accs_p2(ctx)
     }
 
+    /// (Admin only) Set risk free rate and volatility estimates
     pub fn set_vol(ctx: Context<SetVol>, vol: u64, risk_free: u32) -> Result<()> {
         instructions::set_vol::set_vol(ctx, vol, risk_free)
     }
 
+    /// Deposit as an LP
     pub fn deposit(ctx: Context<Deposit>, amount: u64) -> Result<()> {
         instructions::deposit::deposit(ctx, amount)
     }
 
-    /// Start the sale of options. The sale begins when this ix fires, and options expire at now +
-    /// spread_vault.option_duration
+    /// (Admin only) Start the sale of options. The sale begins when this ix fires, and options
+    /// expire at now + spread_vault.option_duration
     /// * call/put_strikes - pass strikes in pairs, in ascending order, padded with zeros. For
     /// example to open a 100/105 spread and a 105/110 spread, pass [0, 0, 0, 0, 100, 105, 105, 110]
     /// * price_lower/upper_threshold - If on devnet/localnet, the price is always set to
@@ -102,14 +109,19 @@ pub mod spreadmarket {
         )
     }
 
+    /// Redeem an option after expiration, claiming earned funds
     pub fn redeem_spread(ctx: Context<RedeemSpread>) -> Result<()> {
         instructions::redeem_spread::redeem_spread(ctx)
     }
 
+    /// (Permisionless) Crank oracle price to market. The crank closest to the expiration time will
+    /// be the final price used to calculated the option's PnL
     pub fn expire_market(ctx: Context<ExpireMarket>) -> Result<()> {
         instructions::expire_market::expire_market(ctx)
     }
 
+    // TODO *************** WIP instructions***********************
+    /// (Permisionless) Realizes losses, settings aside those funds to be redeemed.
     pub fn end_market_epoch(ctx: Context<EndMarketEpoch>) -> Result<()> {
         instructions::end_market_epoch::end_market_epoch(ctx)
     }

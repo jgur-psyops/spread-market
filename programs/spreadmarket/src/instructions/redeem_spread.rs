@@ -18,13 +18,18 @@ pub struct RedeemSpread<'info> {
     /// * Note: Completely unchecked
     pub dest_acc: Account<'info, TokenAccount>,
 
+    /// CHECK: Completely unchecked, send the rent to any account.
+    pub dest_acc_close_fee: UncheckedAccount<'info>,
+
     #[account(
         has_one = funding_pool
     )]
     pub spread_vault: AccountLoader<'info, SpreadVault>,
 
-    // TODO close upon completion
-    #[account(mut)]
+    #[account(
+        mut, 
+        close = dest_acc_close_fee
+    )]
     pub spread_receipt: AccountLoader<'info, SpreadReceipt>,
 
     pub market_epoch: AccountLoader<'info, MarketEpoch>,
@@ -36,6 +41,10 @@ pub fn redeem_spread(ctx: Context<RedeemSpread>) -> Result<()> {
     let spread_vault = ctx.accounts.spread_vault.load()?;
     let receipt = ctx.accounts.spread_receipt.load()?;
     let epoch = ctx.accounts.market_epoch.load()?;
+
+    if Clock::get().unwrap().unix_timestamp < receipt.expiration {
+        return err!(ErrorCode::SpreadNotExpired);
+    }
 
     let price = epoch.expiration_price;
     let gain_per_contract = if receipt.is_call == CALL {

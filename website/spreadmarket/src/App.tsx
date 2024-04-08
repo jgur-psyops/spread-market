@@ -16,6 +16,7 @@ import VaultListPage from "./pages/VaultList";
 import "@solana/wallet-adapter-react-ui/styles.css";
 import LpPage from "./pages/LpPage";
 import BuyerPage from "./pages/BuyerPage";
+import { Faucet } from "./pages/Faucet";
 
 function App() {
   const network = WalletAdapterNetwork.Devnet;
@@ -37,6 +38,9 @@ function App() {
                     <Link to="/">Home</Link>
                   </li>
                   <li>
+                    <Link to="/faucet">Faucet</Link>
+                  </li>
+                  <li>
                     <Link to="/adminPage">Admin Page</Link>
                   </li>
                   <li>
@@ -50,13 +54,16 @@ function App() {
             </div>
 
             {/* Routes here... */}
-            <Routes>
-              <Route path="/" element={<h1>LANDING PAGE PLACEHOLDER</h1>} />
-              <Route path="/adminPage" element={<AdminPage />} />
-              <Route path="/vaultList" element={<VaultListPage />} />
-              <Route path="/lp/:publicKey" element={<LpPage />} />
-              <Route path="/buyer/:publicKey" element={<BuyerPage />} />
-            </Routes>
+            <main>
+              <Routes>
+                <Route path="/" element={<h1>LANDING PAGE PLACEHOLDER</h1>} />
+                <Route path="/faucet" element={<Faucet />} />
+                <Route path="/adminPage" element={<AdminPage />} />
+                <Route path="/vaultList" element={<VaultListPage />} />
+                <Route path="/lp/:publicKey" element={<LpPage />} />
+                <Route path="/buyer/:publicKey" element={<BuyerPage />} />
+              </Routes>
+            </main>
           </BrowserRouter>
         </WalletModalProvider>
       </WalletProvider>

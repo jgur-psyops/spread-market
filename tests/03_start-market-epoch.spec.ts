@@ -125,7 +125,7 @@ describe("Start Market", () => {
     let vault = await program.account.spreadVault.fetch(spreadVault);
     let market = await program.account.marketEpoch.fetch(marketEpoch);
 
-    assert.equal(vault.epoch, epoch + 1);
+    assert.equal(vault.epoch, epoch);
     assert.approximately(
       vault.saleData.expiration.toNumber(),
       now + vault.optionDuration,

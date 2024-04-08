@@ -33,3 +33,7 @@ static_assertions = "1.1.0"
 psy-macros = "1.0.0"
 psyoracleutils = { version = "0.1.0", default-features = false, features = ["no-entrypoint"] }
 black_scholes = "0.10.1"
+
+# Deployment Info:
+# Last deployed to devnet 4/8/24 @ 15:58 w/ features localnet enabled
+# Devnet ID: 2MWAqfKiQ1BTtW6sdBaAWrS9GNjQm1ixdjvhYabuFZeH

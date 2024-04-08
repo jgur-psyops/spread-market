@@ -29,10 +29,12 @@ pub struct SpreadReceipt {
     /// Max loss of this spread multiplied by the contracts, in `payment_mint_decimals`
     pub exposure: u64,
 
+    /// Matchs the spread_vault's epoch when this was issued.
+    pub epoch: u32,
     /// See `CALL` and `PUT`
     pub is_call: u8,
     pub bump: u8,
-    _padding1: [u8; 6],
+    _padding1: [u8; 2],
 
     _reserved2: [u8; RECEIPT_PADDING],
 }

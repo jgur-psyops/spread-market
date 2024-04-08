@@ -30,6 +30,15 @@ Let's look at what happens at different price points when the options expire:
 - If the price ends below 90, the LP loses (150 \* 5) = 750, but keeps the premium. The LP now has 600. Put buyers gain 750 (a profit of 600)
 - At prices in between, e.g. 102, the LP loses some proportion. At 102, the LP loses 200 \* 2 = 400. After the premium, the LP still has 950 in this scenario, but call buyers also profit by 200.
 
+## WHAT IS THE EXPECTED YIELD FOR LPs?
+
+The funding pool is deposited into stablecoin lending while options have not expired, so at minimum the vault performs like a managed stablecoin lending platform. 
+
+We do not depend on vaults to sell out of options for yield, particularly as pricing becomes more aggressive when one side is unbalanced. A vault that has fully sold is maximally exposed, and LPs should be compensated accordingly. 
+
+Ultimately, LPs can expect yields to vary substantially depending on how well the vault's administrator predicts future volatility and how aggressively priced the options are. More conservative strikes are generally less attractive to buyers, but also less likely to be assigned at expiration!
+
+
 ## HOW DOES THE VAULT AVOID DELTA EXPOSURE
 
 The vault tries to keep its call side and put side balanced to create a condor-like position. To achieve this, the vault adds an ever-increasing premium to the side with more buyers. For example, if the price is 100, and 100 calls have been sold a 105/110, but only 25 puts have been sold at 90/95, the vault will charge more for calls. The proportion of the extra charge will decrease if the number of puts sold gets closer to the number of calls. This ensures that LPs are not wiped out by a move in one direction when no buyers want to purchase the other direction.
@@ -58,10 +67,16 @@ The biggest advantage is that because the spread is sold atomically, you do not 
 
 Spread vaults can be quickly initialized for any asset, so a broader selection of assets can be traded.
 
+## HOW DOES REDEMPTION WORK AT EXPIRATION
+
+There is a permisionless crank to set the current price of the market, any user can fire it to update the price based on the current oracle price. The vault administrator will also attempt to do so. The cranked price that ran closest to the expiration time is used as the final price (this may be several seconds before or after the true expiration if the network is congested). 
+
+The vault then uses this price to determine its realized loss per contract. The vault will (permisionlessly) allocate realized losses before the next round of options are sold, which any use can fire if the vault adminstrator hasn't done so. At any time after that, even weeks or months later, option buyers can claim their earnings. To maximize yield, even realized losses stay in stablecoin lending until a withdraw is requested. In rare instances, if the stablecoin lending platform is fully utilized, buyers may need to wait to claim their funds.
+
 ## ARE MY OPTIONS AND LP TOKENS A LIQUID ASSET
 
 Soon!
 
 ## DISCLAIMER
 
-None of the above is financial advice. 
+None of the above is financial advice. These are soley the opinions of Spread Market, and we have not been paid to write this message. Always do your due diligence.

@@ -62,6 +62,7 @@ pub fn init_receipt(
     spread_receipt.expiration = spread_vault.sale_data.expiration;
     spread_receipt.contracts = 0;
     spread_receipt.exposure = 0;
+    spread_receipt.epoch = spread_vault.epoch;
     spread_receipt.is_call = if is_call { CALL } else { PUT };
     spread_receipt.bump = *ctx.bumps.get("spread_receipt").unwrap();
 

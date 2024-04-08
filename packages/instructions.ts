@@ -2,7 +2,7 @@ import { Program } from "@coral-xyz/anchor";
 import { TOKEN_PROGRAM_ID } from "@coral-xyz/anchor/dist/cjs/utils/token";
 import { PublicKey, SYSVAR_RENT_PUBKEY, SystemProgram } from "@solana/web3.js";
 import BN from "bn.js";
-import { Spreadmarket } from "../target/types/spreadmarket";
+import { Spreadmarket } from "../packages/idl";
 import {
   deriveFeePool,
   deriveFundingPool,
@@ -15,14 +15,14 @@ import {
 
 /**
  * Called before the first purchase on any vault at a given strke pair.
- * @param program 
- * @param payer 
- * @param owner 
- * @param spreadVault 
- * @param strikeLower 
- * @param strikeUpper 
- * @param isCall 
- * @returns 
+ * @param program
+ * @param payer
+ * @param owner
+ * @param spreadVault
+ * @param strikeLower
+ * @param strikeUpper
+ * @param isCall
+ * @returns
  */
 export const initReceipt = (
   program: Program<Spreadmarket>,
@@ -31,7 +31,7 @@ export const initReceipt = (
   spreadVault: PublicKey,
   strikeLower: BN,
   strikeUpper: BN,
-  isCall: number
+  isCall: number,
 ) => {
   const [spreadReciept] = deriveSpreadReciept(
     program.programId,
@@ -39,7 +39,7 @@ export const initReceipt = (
     spreadVault,
     strikeLower,
     strikeUpper,
-    isCall
+    isCall,
   );
 
   const ix = program.methods
@@ -71,7 +71,7 @@ export const buySpread = (
   strikeUpper: BN,
   priceLowerThreshold: BN,
   priceUpperThreshold: BN,
-  isCall: number
+  isCall: number,
 ) => {
   const [spreadReciept] = deriveSpreadReciept(
     program.programId,
@@ -79,7 +79,7 @@ export const buySpread = (
     spreadVault,
     strikeLower,
     strikeUpper,
-    isCall
+    isCall,
   );
 
   const ix = program.methods

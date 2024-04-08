@@ -39,7 +39,7 @@ export const deriveSpreadReciept = (
   spreadVault: PublicKey,
   strikeLower: BN,
   strikeUpper: BN,
-  isCall: number
+  isCall: number,
 ) => {
   return PublicKey.findProgramAddressSync(
     [

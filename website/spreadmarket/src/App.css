@@ -15,11 +15,14 @@ body {
 }
 
 #root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+  max-width: none;
+  margin: 0 0;
+  padding: 0;
   background: transparent;
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  height: 100vh;
 }
 
 /* Navbar fixed to the top of the viewport */
@@ -28,6 +31,7 @@ nav {
   top: 0;
   left: 0;
   width: 100%;
+  height: 8vh; /* Mobile only */
   background: #af5947; 
   box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Adds a shadow for some depth */
   z-index: 1000; /* Ensure the navbar is above other content */
@@ -43,7 +47,8 @@ nav ul {
   padding: 0.5rem 2rem;
   list-style-type: none;
   text-align: center;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-start;
 }
 nav li {
   display: inline;
@@ -77,4 +82,97 @@ nav li a {
   background-image: url('assets/wallet.svg');
   background-size: cover;
   background-repeat: no-repeat;
+}
+
+/* Main area styling overrides (don't apply to navbar) */
+main {
+  text-align: left;
+  align-items: flex-start;
+  font-size: 2vmin;
+  padding-top: 8vh; /* Mobile only */
+}
+
+/* Common Primitives for non-user-facing ugly pages */
+
+.Button-generic {
+  background-color: #af5947;
+  color: #f2f2ee;
+  font-size: calc(2px + 2vmin);
+  padding: 4px 4px 4px 4px;
+  border-radius: 1px;
+  margin: 2px 0px;
+  cursor: context-menu;
+}
+
+.Button-small {
+  background-color: #af5947;
+  color: #f2f2ee;
+  font-size: calc(2vmin);
+  padding: 2px 1vmin 2px 1vmin;
+  border-radius: 1px;
+  margin: 2px 0px;
+  cursor: pointer;
+}
+
+.left-align-container {
+  text-align: left;
+  max-width: none;
+}
+
+.Monospace-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  font-size: calc(2vmin);
+  font-family: "Roboto Mono", "Menlo", "Monaco", "Consolas", "Courier New", monospace;
+  margin-top: 1px;
+  margin-bottom: 1px;
+}
+
+.Standard-input-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  font-size: calc(2vmin);
+  margin-top: 1px;
+  margin-bottom: 1px;
+}
+
+.tiny-vertical-divider {
+  width: auto;
+  height: calc(1vmin);
+  display: inline-block;
+}
+
+.tiny-vertical-divider-one-char {
+  width: 1vmin;
+  height: calc(1vmin);
+}
+
+.Section-header {
+  font-size: calc(2px + 3vmin);
+  color: #e99c71;
+}
+
+  /*  Modifications for desktop screen sizes */
+@media (min-width: 768px) {
+  nav{
+    height: 4vh;
+  }
+  main {
+    padding-top: 4vh;
+  }
+  /*  Navbar becomes stacked horizontally */
+  nav ul {
+    flex-direction: row;
+    padding: 0.5rem 2rem;
+    align-items: center;
+    justify-content: flex-start;
+  }
+  nav li {
+    margin: 0 1em; 
+  }
+  .wallet-button-container {
+    margin-left: auto;
+  }
 }
