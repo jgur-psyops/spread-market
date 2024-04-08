@@ -17,7 +17,7 @@ import {
   TransactionInstruction,
 } from "@solana/web3.js";
 import { NumberInput } from "../utils/primitives";
-import { mintFromFaucet } from "../utils/faucet";
+
 import useSendTxLogic from "../hooks/useSendTx";
 
 const DEVNET_PSY_MINT = new PublicKey(
