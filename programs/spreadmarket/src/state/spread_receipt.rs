@@ -25,8 +25,8 @@ pub struct SpreadReceipt {
     /// Unix timestamp when option expires
     pub expiration: i64,
     /// Number of contracts sold (1 contract controls 1 of the asset)
-    pub volume: u64,
-    /// Max loss of this spread multiplied by the volume, in `payment_mint_decimals`
+    pub contracts: u64,
+    /// Max loss of this spread multiplied by the contracts, in `payment_mint_decimals`
     pub exposure: u64,
 
     /// See `CALL` and `PUT`

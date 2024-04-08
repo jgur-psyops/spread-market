@@ -1,5 +1,6 @@
-// TODO proportional ownership of funding_pool minus realized loss right now.
-// Also cannot reduce funding_pool below the largest exposure
+// TODO proportional ownership of funding_pool minus realized loss right now. (no premiums)
+// TODO Also cannot reduce funding_pool below the largest exposure
+// TODO if funds are locked in lending, first trigger a withdraw into the funding pool
 
 //use crate::errors::ErrorCode;
 use crate::state::SpreadVault;

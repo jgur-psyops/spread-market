@@ -40,6 +40,10 @@ pub struct SpreadVault {
     /// Amount lost in previous rounds of options, but not yet claimed by buyers.
     /// * In `payment_mint_decimals`
     pub realized_loss: u64,
+    /// Amount deposited in lending. Still available as collateral, but cannot be withdraw until
+    /// lending ends (typically the end of an epoch)
+    /// * In `payment_mint_decimals`
+    pub lent_funds: u64,
     /// Funds not collateralized by any option, aka the remaining max exposure of the vault.
     /// * In `payment_mint_decimals`
     pub free_funds: u64,

@@ -117,4 +117,12 @@ pub mod spreadmarket {
     pub fn withdraw(ctx: Context<Withdraw>, amt: u64) -> Result<()> {
         instructions::withdraw::withdraw(ctx, amt)
     }
+
+    pub fn lend_funds(ctx: Context<LendFunds>, amount: u64) -> Result<()> {
+        instructions::lend_funds::lend_funds(ctx, amount)
+    }
+
+    pub fn remove_lend(ctx: Context<RemoveLend>, amount: u64) -> Result<()> {
+        instructions::remove_lend::remove_lend(ctx, amount)
+    }
 }

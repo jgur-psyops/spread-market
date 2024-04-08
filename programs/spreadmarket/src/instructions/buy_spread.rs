@@ -206,8 +206,8 @@ pub fn buy_spread(
         .premium_paid
         .checked_add(net_cost)
         .ok_or(ErrorCode::MathErr)?;
-    spread_receipt.volume = spread_receipt
-        .volume
+    spread_receipt.contracts = spread_receipt
+        .contracts
         .checked_add(contracts)
         .ok_or(ErrorCode::MathErr)?;
     spread_receipt.exposure = spread_receipt
