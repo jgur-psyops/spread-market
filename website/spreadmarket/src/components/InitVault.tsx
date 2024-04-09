@@ -68,6 +68,7 @@ export const InitVault = () => {
         setSpreadVault(spreadVault);
 
         let sig = await sendTx(new Transaction().add(ix));
+
         console.log("sig: " + sig);
         console.log("init vault: " + spreadVault);
       } catch (error) {

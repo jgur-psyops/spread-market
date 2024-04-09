@@ -32,6 +32,7 @@ pub fn expire_market(ctx: Context<ExpireMarket>) -> Result<()> {
     let expiration_time = spread_vault.sale_data.expiration;
     let is_expired = current_time > expiration_time;
 
+    // TODO overides for devnet/localnet
     let price = get_oracle_price(
         &ctx.accounts.asset_oracle,
         PRICE_DECIMALS,

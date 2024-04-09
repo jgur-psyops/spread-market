@@ -7,10 +7,13 @@
   light: #f2f2ee
 */
 
+html {
+  background-color: #66646b;
+}
+
 body {
   margin: 0;
   width: 100%;
-  height: 100%;
   padding: 0;
   background-color: #66646b; 
   color: #e99c71; 
@@ -21,11 +24,11 @@ body {
   width: 100%;
   margin: 0 0;
   padding: 0;
-  background: transparent;
   display: flex;
   justify-content: flex-start;
   align-items: flex-start;
-  height: 100vh;
+  min-height: 100vh;
+  background-color: #66646b;
 }
 
 .slackey-regular {
@@ -39,7 +42,6 @@ nav {
   top: 0;
   left: 0;
   width: 100%;
-  height: 8vh; /* Mobile only */
   background: #af5947; 
   box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Adds a shadow for some depth */
   z-index: 1000; /* Ensure the navbar is above other content */
@@ -73,7 +75,7 @@ nav li a {
 }
 
 .wallet-button-container .wallet-adapter-button {
-  background-color: #af5947; 
+  background-color: transparent; /* Stupid hack in case button exceeds navbar*/
   color: #f2f2ee; 
 }
 
@@ -97,7 +99,7 @@ main {
   text-align: left;
   align-items: flex-start;
   font-size: 2vmin;
-  padding-top: 8vh; /* Mobile only */
+  padding-top: 9vh; /* Mobile only */
 }
 
 /* Common Primitives for non-user-facing ugly pages */
@@ -177,15 +179,6 @@ main {
   color: #e99c71;
 }
 
-
-/*
-  Color Palette (use find and replace to change, we aren't fancy css wizards here)
-  background: #66646b
-  dark acc: #af5947
-  light acc: #9c9398
-  main: #e99c71
-  light: #f2f2ee
-*/
 .Input-box-small {
   background-color: #9c9398;
   color: #f2f2ee;
@@ -227,9 +220,9 @@ main {
 
   /*  Modifications for desktop screen sizes */
 @media (min-width: 768px) {
-  nav{
+  /* nav{
     height: 4vh;
-  }
+  } */
   main {
     padding-top: 4vh;
   }
@@ -244,11 +237,12 @@ main {
     margin: 0 1em; 
   }
   .wallet-button-container {
+    height: 4vh;
     margin-left: auto;
   }
 }
 
-
+/* Bouncing toast animation */
 @keyframes bounce {
   0%, 20%, 50%, 80%, 100% {
     transform: translateY(0);
@@ -260,7 +254,6 @@ main {
     transform: translateY(-15px);
   }
 }
-
 .smiley-toast-animation {
   width: 300px;
   height: 300px; 

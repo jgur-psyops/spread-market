@@ -31,7 +31,7 @@ export const initReceipt = (
   spreadVault: PublicKey,
   strikeLower: BN,
   strikeUpper: BN,
-  isCall: number,
+  isCall: number
 ) => {
   const [spreadReciept] = deriveSpreadReciept(
     program.programId,
@@ -39,7 +39,7 @@ export const initReceipt = (
     spreadVault,
     strikeLower,
     strikeUpper,
-    isCall,
+    isCall
   );
 
   const ix = program.methods
@@ -50,6 +50,32 @@ export const initReceipt = (
       spreadVault: spreadVault,
       spreadReceipt: spreadReciept,
 
+      rent: SYSVAR_RENT_PUBKEY,
+      systemProgram: SystemProgram.programId,
+    })
+    .instruction();
+
+  return ix;
+};
+
+export const expireMarket = (
+  program: Program<Spreadmarket>,
+  spreadVault: PublicKey,
+  assetOracle: PublicKey,
+  epoch: number
+) => {
+  const [marketEpoch] = deriveMarketEpoch(
+    program.programId,
+    spreadVault,
+    epoch
+  );
+
+  const ix = program.methods
+    .expireMarket()
+    .accounts({
+      spreadVault: spreadVault,
+      marketEpoch: marketEpoch,
+      assetOracle: assetOracle,
       rent: SYSVAR_RENT_PUBKEY,
       systemProgram: SystemProgram.programId,
     })
@@ -71,7 +97,7 @@ export const buySpread = (
   strikeUpper: BN,
   priceLowerThreshold: BN,
   priceUpperThreshold: BN,
-  isCall: number,
+  isCall: number
 ) => {
   const [spreadReciept] = deriveSpreadReciept(
     program.programId,
@@ -79,7 +105,7 @@ export const buySpread = (
     spreadVault,
     strikeLower,
     strikeUpper,
-    isCall,
+    isCall
   );
 
   const ix = program.methods

@@ -55,7 +55,7 @@ function App() {
             </div>
 
             {/* Routes here... */}
-            <main className="w-full h-full flex items-center  m-auto">
+            <main className="w-full h-full">
               <Routes>
                 <Route path="/" element={<Landing />} />
                 <Route path="/faucet" element={<Faucet />} />

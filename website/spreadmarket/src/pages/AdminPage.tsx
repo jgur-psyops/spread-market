@@ -11,6 +11,7 @@ export const AdminPage = () => {
       <div className="Section-header">
         {"Create and maintain existing spread vaults"}
       </div>
+      {"This page is for administrators to play with vault settings."}
       <InitVault></InitVault>
       <VaultMaintenance></VaultMaintenance>
     </div>
