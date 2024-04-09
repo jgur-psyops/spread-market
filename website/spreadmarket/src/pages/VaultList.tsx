@@ -24,7 +24,7 @@ export const VaultList = () => {
     };
 
     getVaultInfo();
-  }, []);
+  }, [VAULTS_DEVNET]);
 
   return (
     <div>

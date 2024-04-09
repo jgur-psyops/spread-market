@@ -7,7 +7,7 @@ import {
 import { useAnchorWallet } from "@solana/wallet-adapter-react";
 import useSendTxLogic from "../hooks/useSendTx";
 import { useSpreadProgram } from "../hooks/useSpreadProgram";
-import { initSpreadVault } from "../package/instructions";
+import { initSpreadVault, initSpreadVaultAccs } from "../package/instructions";
 import { PublicKey, Transaction } from "@solana/web3.js";
 import { USDC_MINT_DEVNET, u32MAX } from "../constants";
 import { deriveSpreadVault } from "../package/pdas";
@@ -45,18 +45,21 @@ export const InitVault = () => {
       assetMint
     ) {
       try {
-        const ix = await initSpreadVault(
-          // @ts-ignore
-          program,
-          wallet.publicKey,
-          admin,
-          withdrawAuthority,
-          assetOracle,
-          paymentMint,
-          assetMint,
-          feeRate * u32MAX,
-          optionDuration,
-          nonce
+        let tx = new Transaction();
+
+        tx.add(
+          await initSpreadVault(
+            program,
+            wallet.publicKey,
+            admin,
+            withdrawAuthority,
+            assetOracle,
+            paymentMint,
+            assetMint,
+            feeRate * u32MAX,
+            optionDuration,
+            nonce
+          )
         );
 
         const [spreadVault] = deriveSpreadVault(
@@ -65,9 +68,17 @@ export const InitVault = () => {
           assetMint,
           nonce
         );
+        tx.add(
+          ...(await initSpreadVaultAccs(
+            program,
+            wallet.publicKey,
+            spreadVault,
+            paymentMint
+          ))
+        );
         setSpreadVault(spreadVault);
 
-        let sig = await sendTx(new Transaction().add(ix));
+        let sig = await sendTx(tx);
 
         console.log("sig: " + sig);
         console.log("init vault: " + spreadVault);

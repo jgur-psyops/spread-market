@@ -27,6 +27,8 @@ export const u8MAX: number = 255;
 export const SECONDS_PER_WEEK: number = 604800;
 /** 6 */
 export const PRICE_DECIMALS = 6;
+export const CALL: number = 1;
+export const PUT: number = 2;
 
 /**
  * Maps a mint to the decimals it uses for native currency.
@@ -60,31 +62,31 @@ export const USDC_MINT_MAINNET = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v";
  * * Fee rate: 0%
  * * Risk free: 5%
  * * Vol: 125%
- * * Nonce: 0
+ * * Nonce: 2
  * * Duration: 601200  (one hour less than one week)
  * * strikes: (calls) 190/195 (puts) 165/170
  */
-export const SOL_VAULT_DEVNET = "9U3oKxEn2i6uo6hBHWv2NFsco1ZNJQdRo96vK1CBPCvG";
+export const SOL_VAULT_DEVNET = "57v4KNG1MMg8M1a6YrYB6zVZMJjkFJXtEphQJ2vgkVC3";
 /**
  * ************* Initial settings *****************
  * * Fee rate: 0%
  * * Risk free: 5%
- * * Vol: 75%
- * * Nonce: 1
+ * * Vol: 125%
+ * * Nonce: 2
  * * Duration: 601200  (one hour less than one week)
  * * strikes: .00003/.00004, .00001/.00002,
  */
-export const BONK_VAULT_DEVNET = "5XhwD62JeseNS8ZLN7YwrpCH98N88i8SbB2fyFrW1bsQ";
+export const BONK_VAULT_DEVNET = "zbeTsmNviv3zdRguh3ySbDwZe6rdo94V6n1CkYyoPyR";
 /**
  * ************* Initial settings *****************
  * * Fee rate: 0%
  * * Risk free: 5%
  * * Vol: 75%
- * * Nonce: 1
+ * * Nonce: 3
  * * Duration: 601200  (one hour less than one week)
  * * strikes: 4100/4300, 3500/3600
  */
-export const ETH_VAULT_DEVNET = "DnuHeGfto9oqPam5jfHENNaG9rDRPycpF28xGeDwb6M9";
+export const ETH_VAULT_DEVNET = "FXX4JJW3ujbXsWsnyBU8fcoFLZoiGEHfERN8D7AgdBA8";
 
 export const VAULTS_DEVNET = [
   SOL_VAULT_DEVNET,

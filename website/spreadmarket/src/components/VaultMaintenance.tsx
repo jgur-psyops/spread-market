@@ -115,6 +115,16 @@ export const VaultMaintenance = () => {
     }
   };
 
+  const dumpInfo = async () => {
+    if (spreadVault) {
+      let vault = await program.account.spreadVault.fetch(spreadVault);
+      console.log("vault lp mint: " + vault.lpMint);
+      console.log("vault funding pool: " + vault.fundingPool);
+      console.log("vault premiums pool: " + vault.premiumsPool);
+      console.log("vault fee pool: " + vault.feePool);
+    }
+  };
+
   const startMarketEpochButton = async () => {
     if (wallet && program && spreadVault) {
       let vault = await program.account.spreadVault.fetch(spreadVault);
@@ -134,10 +144,10 @@ export const VaultMaintenance = () => {
       let puts = sortedPutStrikes.map(
         (strike) => new BN(strike * 10 ** PRICE_DECIMALS)
       );
-      for (let i=0; i< calls.length;i++){
+      for (let i = 0; i < calls.length; i++) {
         console.log("shipping call: " + calls[i].toNumber());
       }
-      for (let i=0; i< puts.length;i++){
+      for (let i = 0; i < puts.length; i++) {
         console.log("shipping put: " + puts[i].toNumber());
       }
 
@@ -224,6 +234,9 @@ export const VaultMaintenance = () => {
             labelText="Spread Vault"
             value={spreadVault?.toString()}
           />
+          <button className="Button-small" onClick={dumpInfo}>
+            {"Dump vault Info"}
+          </button>
           <hr className="hr-line-break"></hr>
           <span className="Section-header">{"Start a new Market"}</span>
 
