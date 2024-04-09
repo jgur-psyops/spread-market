@@ -51,3 +51,25 @@ export const USDC_MINT_DEVNET_KEYPAIR = Keypair.fromSecretKey(
 );
 export const USDC_MINT_DEVNET = "9dbktdo4aG25kDRz2p7nXPhoxLrsK6zEs4X8rrEM5VB8";
 export const USDC_MINT_MAINNET = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v";
+
+
+/**
+ * ************* Initial settings *****************
+ * * Fee rate: 0%
+ * * Risk free: 5%
+ * * Vol: 125%
+ * * Nonce: 0
+ * * Duration: 601200  (one hour less than one week)
+ */
+export const SOL_VAULT_DEVNET = "9U3oKxEn2i6uo6hBHWv2NFsco1ZNJQdRo96vK1CBPCvG";
+
+export const MINT_TO_COINGECKO_API = new Map<string, number>([
+  // SOL is the same on devnet and mainnet.
+  ["So11111111111111111111111111111111111111112", 9],
+
+  // devnet mints
+  // TODO
+
+  // Mainnet mints
+  // TODO
+]);

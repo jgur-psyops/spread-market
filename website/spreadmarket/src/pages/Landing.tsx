@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 export const Landing = () => {
   return (
     <div
@@ -75,7 +77,7 @@ export const Hero = () => {
           <div className="self-stretch flex-col justify-start items-start gap-1 flex">
             <div className=" h-14  whitespace-nowrap">
               <div className="text-center text-white text-5xl font-medium font-['Poppins'] leading-10">
-                Unlock the{" "}
+                Bad Yields on Defi{" "}
               </div>
             </div>
             <div className="self-stretch justify-center items-center inline-flex">
@@ -83,7 +85,7 @@ export const Hero = () => {
                 className="w-24 h-24 origin-top-left"
                 src="/assets/LeftTitleSpread.png"
               />
-              <div style={subTitleStyle}> full potential</div>
+              <div style={subTitleStyle}> are Toast</div>
               <img
                 className="w-24 h-24 origin-top-left "
                 src="/assets/RightTitleSpread.png"
@@ -92,7 +94,7 @@ export const Hero = () => {
             <div className="self-stretch justify-start items-center gap-2.5 inline-flex">
               <div className="text-right text-white text-5xl font-medium font-['Poppins'] leading-10">
                 {" "}
-                of your trading
+                with sBread Markets
               </div>
             </div>
           </div>
@@ -100,13 +102,13 @@ export const Hero = () => {
             <div className="px-4 py-4 bg-gradient-to-b from-white to-indigo-100 rounded-lg shadow border border-indigo-300 justify-center items-center gap-1 inline-flex">
               <div className="justify-start items-center gap-2.5 flex">
                 <div className="text-center text-slate-900 text-lg font-bold font-['Inter'] leading-snug">
-                  Get started now
+                  <Link to="/vaultList">Get Started</Link>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <img className="w-96 h-96" src="/assets/SpreadFace.png" />
+        <img className="smiley-toast-animation" src="/assets/toasty.svg" alt="Smiley Toast" />
       </div>
     </div>
   );
@@ -120,18 +122,35 @@ export const HowItWorks = () => {
           How does it work?
         </div>
         <div className="text-center text-lg font-medium font-['Inter']">
-          Four different ways of creating delta neutral positions
+          {/* TODO LOREM IPSUM */}
         </div>
       </div>
+      <hr className="hr-line-break"></hr>
       <div className="w-full h-80 justify-around items-center inline-flex">
-        <HowItWorksCard title="Barney like socks" />
-        <HowItWorksCard title="I Love Barney" />
+        <HowItWorksCard
+          title="Fly like a metal bird"
+          textBody="Your assets fly like an Eagle (well, like a Condor anyways)."
+          imageFileName="iron-condor.svg"
+        />
+        <HowItWorksCard
+          title="Profit off volatility, don't cry about it."
+          textBody="Never leave the comfort of your stablecoins."
+          imageFileName="iron-condor.svg"
+        />
       </div>
     </div>
   );
 };
 
-export const HowItWorksCard = ({ title }: { title: string }) => {
+export const HowItWorksCard = ({
+  title,
+  textBody,
+  imageFileName,
+}: {
+  title: string;
+  textBody: string;
+  imageFileName: string;
+}) => {
   return (
     <div className="w-96 p-7 bg-gradient-to-b from-indigo-400 to-slate-900 rounded-2xl flex-col justify-start items-start gap-6 inline-flex">
       <div className="flex-col justify-start items-start gap-5 flex">
@@ -141,19 +160,8 @@ export const HowItWorksCard = ({ title }: { title: string }) => {
       </div>
       <div className="self-stretch flex-col justify-start items-start gap-5 flex">
         <div className="self-stretch">
-          <span className="text-slate-400 text-sm font-medium font-['Inter'] leading-tight">
-            Stake the most popular tokens across well-known such as{" "}
-          </span>
-
-          <span className="text-violet-200 text-sm font-semibold font-['Inter'] leading-tight">
-            Delta Neutral Strategy{" "}
-          </span>
-          <span className="text-slate-400 text-sm font-semibold font-['Inter'] leading-tight">
-            {" "}
-          </span>
-          <span className="text-slate-400 text-sm font-medium font-['Inter'] leading-tight">
-            and enjoy boosted yield.
-          </span>
+          {textBody}
+          <img className="mt-4" src={`/assets/${imageFileName}`} alt="" />
         </div>
       </div>
       <div className="justify-center items-center gap-5 inline-flex">

@@ -10,6 +10,7 @@ import { useSpreadProgram } from "../hooks/useSpreadProgram";
 import { initSpreadVault, setVol } from "../../../../packages/instructions";
 import { PublicKey, Transaction } from "@solana/web3.js";
 import { USDC_MINT_DEVNET, u32MAX, u32toPercent } from "../constants";
+import {getSolPrice} from "../utils/gecko";
 import { BN } from "bn.js";
 
 export const VaultMaintenance = () => {
@@ -56,8 +57,10 @@ export const VaultMaintenance = () => {
   };
 
   const getPrice = async () => {
-
-  }
+      const price = await getSolPrice();
+      console.log(`The price of Solana is: ${price} USD`);
+      // TODO do something with price....
+  };
 
   // const startMarketEpoch = async () => {
   //   if (wallet && program && spreadVault) {
@@ -125,6 +128,10 @@ export const VaultMaintenance = () => {
           </button>
           <button className="Button-small" onClick={setVolatilityButton}>
             {"Update Volatility"}
+          </button>
+          <div></div>
+          <button className="Button-small" onClick={getPrice}>
+            {"Get Sol Price"}
           </button>
         </div>
       )}
