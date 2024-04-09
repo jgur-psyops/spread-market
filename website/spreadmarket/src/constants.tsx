@@ -62,28 +62,41 @@ export const USDC_MINT_MAINNET = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v";
  * * Vol: 125%
  * * Nonce: 0
  * * Duration: 601200  (one hour less than one week)
- * * strikes: (calls) 190/195 (puts) 165/170 
+ * * strikes: (calls) 190/195 (puts) 165/170
  */
 export const SOL_VAULT_DEVNET = "9U3oKxEn2i6uo6hBHWv2NFsco1ZNJQdRo96vK1CBPCvG";
 /**
  * ************* Initial settings *****************
  * * Fee rate: 0%
  * * Risk free: 5%
- * * Vol: 125%
- * * Nonce: 0
+ * * Vol: 75%
+ * * Nonce: 1
  * * Duration: 601200  (one hour less than one week)
+ * * strikes: .00003/.00004, .00001/.00002,
  */
-export const BONK_VAULT_DEVNET = "BvxP46TAyQ9dwphktENJCKd2oZq4e8wUjbwpGMeofj77";
+export const BONK_VAULT_DEVNET = "5XhwD62JeseNS8ZLN7YwrpCH98N88i8SbB2fyFrW1bsQ";
 /**
  * ************* Initial settings *****************
  * * Fee rate: 0%
  * * Risk free: 5%
- * * Vol: 125%
- * * Nonce: 0
+ * * Vol: 75%
+ * * Nonce: 1
  * * Duration: 601200  (one hour less than one week)
- * * strikes: (calls) .00003/.00004 (puts) .00001/.00002
+ * * strikes: 4100/4300, 3500/3600
  */
-export const ETH_VAULT_DEVNET = "FHronfyj2gGhyD4ManELUZUD8WFv8kRhsMyVeNpuFVi3";
+export const ETH_VAULT_DEVNET = "DnuHeGfto9oqPam5jfHENNaG9rDRPycpF28xGeDwb6M9";
+
+export const VAULTS_DEVNET = [
+  SOL_VAULT_DEVNET,
+  BONK_VAULT_DEVNET,
+  ETH_VAULT_DEVNET,
+];
+
+export const VAULT_TO_NAME = new Map([
+  [SOL_VAULT_DEVNET, "Sol"],
+  [BONK_VAULT_DEVNET, "Bonk"],
+  [ETH_VAULT_DEVNET, "Weth"],
+]);
 
 export const MINT_TO_COINGECKO_API = new Map([
   // SOL is the same on devnet and mainnet.

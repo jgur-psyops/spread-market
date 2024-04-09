@@ -1,16 +1,18 @@
-import React from 'react';
-import { useParams } from 'react-router-dom';
+import React from "react";
+import { useLocation, useParams } from "react-router-dom";
+import { VAULT_TO_NAME } from "../constants";
 
-function LpPage() {
-  const { publicKey } = useParams();
-  
+export const LpPage = () => {
+  const { key } = useParams();
+
   return (
     <div>
-      <h2>LP PAGE</h2>
-      <p>Vault: {publicKey}</p>
-      <h2>THIS IS A PAGE WHERE LPs WILL DEPOSIT, WITHDRAW, MANAGE POSITION, ETC</h2>
+      {"Deposit into the " + VAULT_TO_NAME.get(key!) + " Vault"}
+      <h2>
+        THIS IS A PAGE WHERE LPs WILL DEPOSIT, WITHDRAW, MANAGE POSITION, ETC
+      </h2>
     </div>
   );
-}
+};
 
 export default LpPage;

@@ -17,15 +17,7 @@ import {
   TransactionInstruction,
 } from "@solana/web3.js";
 import { NumberInput } from "../utils/primitives";
-
 import useSendTxLogic from "../hooks/useSendTx";
-
-const DEVNET_PSY_MINT = new PublicKey(
-  "BzwRWwr1kCLJVUUM14fQthP6FJKrGpXjw3ZHTZ6PQsYa"
-);
-const DEVNET_FAUCET_PSY = new PublicKey(
-  "7jJJnHWagPPG544FtxSVp8eD52FwCsARcqqup1q3XVio"
-);
 
 export const Faucet = () => {
   const [amount, setAmount] = useState<number>(100);

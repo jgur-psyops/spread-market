@@ -1,3 +1,7 @@
+import { IdlAccounts } from "@coral-xyz/anchor";
+
+export type SpreadVault = IdlAccounts<typeof IDL>["spreadVault"];
+
 export type Spreadmarket = {
   version: "0.1.0";
   name: "spreadmarket";

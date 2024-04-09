@@ -61,8 +61,8 @@ function App() {
                 <Route path="/faucet" element={<Faucet />} />
                 <Route path="/adminPage" element={<AdminPage />} />
                 <Route path="/vaultList" element={<VaultListPage />} />
-                <Route path="/lp/:publicKey" element={<LpPage />} />
-                <Route path="/buyer/:publicKey" element={<BuyerPage />} />
+                <Route path="/lp/:key" element={<LpPage />} />
+                <Route path="/buyer/:key" element={<BuyerPage />} />
               </Routes>
             </main>
           </BrowserRouter>

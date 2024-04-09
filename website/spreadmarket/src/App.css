@@ -261,3 +261,52 @@ main {
   position: relative;
   animation: bounce 2s infinite;
 }
+
+/* Vault cards */
+/* VaultListPage.css */
+.vaults-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.vault-card {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 20px;
+  width: 300px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+.vault-card h3 {
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.vault-button {
+  background-color: #af5947;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  margin: 5px;
+  border-radius: 5px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.vault-button:hover {
+  background-color: #66646b;
+}
+
+/*
+  Color Palette (use find and replace to change, we aren't fancy css wizards here)
+  background: #66646b
+  dark acc: #af5947
+  light acc: #9c9398
+  main: #e99c71
+  light: #f2f2ee
+*/
