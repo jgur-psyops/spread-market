@@ -2,7 +2,7 @@ import { Program } from "@coral-xyz/anchor";
 import { TOKEN_PROGRAM_ID } from "@coral-xyz/anchor/dist/cjs/utils/token";
 import { PublicKey, SYSVAR_RENT_PUBKEY, SystemProgram } from "@solana/web3.js";
 import BN from "bn.js";
-import { Spreadmarket } from "../packages/idl";
+import { Spreadmarket } from "./idl";
 import {
   deriveFeePool,
   deriveFundingPool,

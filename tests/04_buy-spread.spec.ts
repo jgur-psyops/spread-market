@@ -7,7 +7,7 @@ import {
   initSpreadVault,
   initSpreadVaultAccs,
   startMarket,
-} from "../packages/instructions";
+} from "../website/spreadmarket/src/package/instructions";
 import { assert } from "chai";
 import {
   Ecosystem,
@@ -31,7 +31,7 @@ import {
   derivePremiumsPool,
   deriveSpreadReciept,
   deriveSpreadVault,
-} from "../packages/pdas";
+} from "../website/spreadmarket/src/package/pdas";
 import { assertBNEqual, assertKeysEqual } from "./utils/genericTests";
 import {
   CALL,

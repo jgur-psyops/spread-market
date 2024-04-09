@@ -9,8 +9,8 @@ import {
   echoEcosystemInfo,
   userState,
 } from "./utils/mock";
-import { deposit } from "../packages/instructions";
-import { deriveSpreadVault } from "../packages/pdas";
+import { deposit } from "../website/spreadmarket/src/package/instructions";
+import { deriveSpreadVault } from "../website/spreadmarket/src/package/pdas";
 import { BN } from "bn.js";
 import {
   getAssociatedTokenAddressSync,

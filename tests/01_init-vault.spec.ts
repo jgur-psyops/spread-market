@@ -1,7 +1,7 @@
 import * as anchor from "@coral-xyz/anchor";
 import { Program } from "@coral-xyz/anchor";
 import { Spreadmarket } from "../target/types/spreadmarket";
-import { initSpreadVault, initSpreadVaultAccs } from "../packages/instructions";
+import { initSpreadVault, initSpreadVaultAccs } from "../website/spreadmarket/src/package/instructions";
 import { assert } from "chai";
 import {
   Ecosystem,
@@ -22,7 +22,7 @@ import {
   deriveLpMint,
   derivePremiumsPool,
   deriveSpreadVault,
-} from "../packages/pdas";
+} from "../website/spreadmarket/src/package/pdas";
 import { assertKeysEqual } from "./utils/genericTests";
 import {
   DEFAULT_FEE_RATE,

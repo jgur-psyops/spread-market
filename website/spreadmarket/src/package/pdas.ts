@@ -1,6 +1,5 @@
 import { PublicKey } from "@solana/web3.js";
 import BN from "bn.js";
-import * as buffer from "buffer";
 
 export const deriveSpreadVault = (
   programId: PublicKey,

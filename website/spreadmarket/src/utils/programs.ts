@@ -5,7 +5,7 @@ import {
   SPREAD_PROGRAM_DEVNET_KEY,
   SPREAD_PROGRAM_MAINNET_KEY,
 } from "../constants";
-import { Spreadmarket, IDL as SpreadmarketIDL } from "../../../../packages/idl";
+import { Spreadmarket, IDL as SpreadmarketIDL } from "../package/idl";
 
 export const initializeSpreadProgram = (
   connection: Connection,

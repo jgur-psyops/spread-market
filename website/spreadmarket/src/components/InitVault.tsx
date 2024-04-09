@@ -7,10 +7,10 @@ import {
 import { useAnchorWallet } from "@solana/wallet-adapter-react";
 import useSendTxLogic from "../hooks/useSendTx";
 import { useSpreadProgram } from "../hooks/useSpreadProgram";
-import { initSpreadVault } from "../../../../packages/instructions";
+import { initSpreadVault } from "../package/instructions";
 import { PublicKey, Transaction } from "@solana/web3.js";
 import { USDC_MINT_DEVNET, u32MAX } from "../constants";
-import { deriveSpreadVault } from "../../../../packages/pdas";
+import { deriveSpreadVault } from "../package/pdas";
 
 export const InitVault = () => {
   const wallet = useAnchorWallet();

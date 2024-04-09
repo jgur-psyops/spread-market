@@ -7,7 +7,7 @@ import {
 import { useAnchorWallet } from "@solana/wallet-adapter-react";
 import useSendTxLogic from "../hooks/useSendTx";
 import { useSpreadProgram } from "../hooks/useSpreadProgram";
-import { initSpreadVault, setVol } from "../../../../packages/instructions";
+import { initSpreadVault, setVol } from "../package/instructions";
 import { PublicKey, Transaction } from "@solana/web3.js";
 import { USDC_MINT_DEVNET, u32MAX, u32toPercent } from "../constants";
 import {getSolPrice} from "../utils/gecko";
