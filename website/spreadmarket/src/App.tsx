@@ -17,6 +17,7 @@ import "@solana/wallet-adapter-react-ui/styles.css";
 import LpPage from "./pages/LpPage";
 import BuyerPage from "./pages/BuyerPage";
 import { Faucet } from "./pages/Faucet";
+import { Landing } from "./pages/Landing";
 
 function App() {
   const network = WalletAdapterNetwork.Devnet;
@@ -54,9 +55,9 @@ function App() {
             </div>
 
             {/* Routes here... */}
-            <main>
+            <main className="w-full h-full flex items-center  m-auto">
               <Routes>
-                <Route path="/" element={<h1>LANDING PAGE PLACEHOLDER</h1>} />
+                <Route path="/" element={<Landing />} />
                 <Route path="/faucet" element={<Faucet />} />
                 <Route path="/adminPage" element={<AdminPage />} />
                 <Route path="/vaultList" element={<VaultListPage />} />
