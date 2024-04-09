@@ -100,7 +100,7 @@ main {
   font-size: calc(2px + 2vmin);
   padding: 4px 4px 4px 4px;
   border-radius: 1px;
-  margin: 2px 0px;
+  margin: 4px 4px;
   cursor: context-menu;
 }
 
@@ -109,8 +109,8 @@ main {
   color: #f2f2ee;
   font-size: calc(2vmin);
   padding: 2px 1vmin 2px 1vmin;
-  border-radius: 1px;
-  margin: 2px 0px;
+  border-radius: 10px;
+  margin: 2px 2px;
   cursor: pointer;
 }
 
@@ -138,9 +138,15 @@ main {
   margin-bottom: 1px;
 }
 
+.Footnote {
+  font-size: calc(1vmin);
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+
 .tiny-vertical-divider {
   width: auto;
-  height: calc(1vmin);
+  height: calc(1vmin + 2px);
   display: inline-block;
 }
 
@@ -149,9 +155,66 @@ main {
   height: calc(1vmin);
 }
 
+.hr-line-break {
+  border-color: #af5947;
+  background-color: #f2f2ee;
+  height: 2px;
+  width: 100%;
+  margin-top: calc(1vmin);
+  margin-bottom: calc(1vmin);
+}
+
 .Section-header {
   font-size: calc(2px + 3vmin);
   color: #e99c71;
+}
+
+
+/*
+  Color Palette (use find and replace to change, we aren't fancy css wizards here)
+  background: #66646b
+  dark acc: #af5947
+  light acc: #9c9398
+  main: #e99c71
+  light: #f2f2ee
+*/
+.Input-box-small {
+  background-color: #9c9398;
+  color: #f2f2ee;
+  font-size: calc(2vmin);
+  padding: 1px 1vmin 1px 1vmin;
+  border-radius: 1px;
+  margin: 2px 0px;
+  cursor: auto;
+}
+
+.Input-box-pubkey {
+  background-color: #9c9398;
+  color: #f2f2ee;
+  font-size: calc(1.5vmin);
+  padding: 1px 1vmin 1px 1vmin;
+  border-radius: 1px;
+  margin: 2px 0px;
+  cursor: auto;
+  overflow: auto;
+  width: calc(1.5vmin * 32);
+  /* Roughly one pubkey */
+}
+
+.Input-box-small::placeholder {
+  background-color: #9c9398;
+  color: #f2f2ee;
+}
+
+.Button-tiny-inline {
+  background-color: #9c9398;
+  color: #f2f2ee;
+  font-size: calc(2vmin);
+  height: calc(4px + 2vmin);
+  padding: 0px 0px 0px 0px;
+  border-radius: 1px;
+  margin: 0px 0px;
+  cursor: pointer;
 }
 
   /*  Modifications for desktop screen sizes */

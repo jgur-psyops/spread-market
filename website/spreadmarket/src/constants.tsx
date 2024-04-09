@@ -10,13 +10,20 @@ export const SPREAD_PROGRAM_MAINNET_KEY =
 
 /** 4_294_967_295 */
 export const u32MAX: number = 4_294_967_295;
+/**
+ * Convert a percentage that has been expressed as some number out of u32 max into a human readable
+ * percentage as float. E.g. `u32Max / 2` returns .5
+ * @param u32
+ */
+export const u32toPercent = (u32: number) => {
+  return u32 / u32MAX;
+};
 /** 65_535 */
 export const u16MAX: number = 65_535;
 /** 255 */
 export const u8MAX: number = 255;
 /** 604800 */
 export const SECONDS_PER_WEEK: number = 604800;
-
 
 /**
  * Maps a mint to the decimals it uses for native currency.

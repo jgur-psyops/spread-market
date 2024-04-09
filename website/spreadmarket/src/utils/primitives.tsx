@@ -124,8 +124,8 @@ export const PubkeyInput: FC<{
   const [keyOk, setKeyOk] = useState(false);
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (
-      e.target.value == "" ||
-      e.target.value == PublicKey.default.toString()
+      e.target.value == "" 
+   //   || e.target.value == PublicKey.default.toString()
     ) {
       setHasEntry(false);
       return;
@@ -160,7 +160,7 @@ export const PubkeyInput: FC<{
         type="text"
         spellCheck="false"
         placeholder="*Paste a Pubkey*"
-        value={value && value != PublicKey.default.toString() ? value : ""}
+        value={value /* && value != PublicKey.default.toString() */ ? value : ""}
         onChange={handleInputChange}
       />
       <div className="tiny-vertical-divider"></div>
