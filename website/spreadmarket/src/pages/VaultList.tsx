@@ -27,39 +27,52 @@ export const VaultList = () => {
   }, [VAULTS_DEVNET]);
 
   return (
-    <div>
-      <div className="vaults-container">
+    <div className="w-full h-full m-auto">
+      <div className="vaults-container h-full self-stretch w-full items-center justify-center flex-wrap">
         {VAULTS_DEVNET.map((vault, index) => (
-          <div key={index} className="vault-card">
-            <div className="Section-header">
+          <div
+            key={index}
+            className="vault-card w-min-[300px]  sm:w-[400px] text-md bg-gradient-to-b from-indigo-400 to-slate-900 rounded-2xl self-stretch p-7 m-5 flex-col justify-start items-start gap-6 inline-flex"
+          >
+            <div className="Section-header text-white text-lg sm:text-xl">
               {"" + VAULT_TO_NAME.get(vault) + " Vault"}
             </div>
             {/* TODO placeholders */}
-            <div>{"Yield: 99.999%"}</div>
-            <div>{"Free funds: " + vaultsData[index]?.freeFunds || 0}</div>
-            <div>
+            <div className="text-base sm:text-lg">{"Yield: 99.999%"}</div>
+            <div className="text-base sm:text-lg">
+              {"Free funds: " + vaultsData[index]?.freeFunds || 0}
+            </div>
+            <div className="text-base sm:text-lg">
               {"Call premiums sold: " +
                 vaultsData[index]?.saleData.netCallPremiums || 0}
             </div>
-            <div>
+            <div className="text-base sm:text-lg">
               {"Put premiums sold: " +
                 vaultsData[index]?.saleData.netPutPremiums || 0}
             </div>
-            <div>
+            <div className="text-base sm:text-lg">
               {"Call volume: " +
                 vaultsData[index]?.saleData.calls[0].exposure || 0}
             </div>
-            <div>
+            <div className="text-base sm:text-lg">
               {"Put volume: " + vaultsData[index]?.saleData.puts[0].exposure ||
                 0}
             </div>
-            <Link to={`/lp/${vault}`} className="vault-button">
-              Go to LP Page
-            </Link>
+            <div className="flex justify-center items-center gap-5 inline-flex">
+              <Link
+                to={`/lp/${vault}`}
+                className="vault-button text-base sm:text-lg"
+              >
+                Go to LP Page
+              </Link>
 
-            <Link to={`/buyer/${vault}`} className="vault-button">
-              Go to Buyer Page
-            </Link>
+              <Link
+                to={`/buyer/${vault}`}
+                className="vault-button text-base sm:text-lg"
+              >
+                Go to Buyer Page
+              </Link>
+            </div>
           </div>
         ))}
       </div>

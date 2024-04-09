@@ -125,7 +125,7 @@ export const Hero = () => {
 
 export const HowItWorks = () => {
   return (
-    <div className="w-full h-full flex flex-col items-center justify-center gap-10">
+    <div className="w-full h-full flex flex-col items-center justify-center gap-10 min-h-[400px]">
       <div className=" flex-col justify-start items-start gap-2.5 inline-flex">
         <div className="whitespace-nowrap text-center text-white text-opacity-97 text-6xl font-bold font-['Poppins'] leading-10">
           How does it work?
@@ -170,7 +170,7 @@ export const HowItWorksCard = ({
   link2?: LinkProps;
 }) => {
   return (
-    <div className="w-[calc(35vmin)] p-7 bg-gradient-to-b from-indigo-400 to-slate-900 rounded-2xl flex-col justify-start items-start gap-6 inline-flex self-stretch">
+    <div className="w-[calc(35vmin)] min-w-[300px] p-7 bg-gradient-to-b from-indigo-400 to-slate-900 rounded-2xl flex-col justify-start items-start gap-6 inline-flex self-stretch">
       <div className="flex-col justify-start items-start gap-5 flex">
         <div className="text-center text-white text-base font-semibold font-['Poppins'] leading-tight">
           {title}

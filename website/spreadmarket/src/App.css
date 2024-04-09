@@ -9,6 +9,7 @@
 
 html {
   background-color: #66646b;
+  height: 100%;
 }
 
 body {
@@ -276,9 +277,10 @@ main {
   border: 1px solid #ccc;
   border-radius: 8px;
   padding: 20px;
-  width: 300px;
+  min-width: 300px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   text-align: center;
+  flex-shrink: 0;
 }
 
 .vault-card h3 {
@@ -287,8 +289,8 @@ main {
 }
 
 .vault-button {
-  background-color: #af5947;
-  color: white;
+  background-color: #e99c71;
+  color: #f2f2ee;
   border: none;
   padding: 5px 10px;
   margin: 5px;
@@ -299,7 +301,8 @@ main {
 }
 
 .vault-button:hover {
-  background-color: #66646b;
+  background-color: #af5947;
+  color: #f2f2ee;
 }
 
 /*
