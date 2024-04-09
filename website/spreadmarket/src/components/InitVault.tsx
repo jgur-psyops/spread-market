@@ -46,6 +46,7 @@ export const InitVault = () => {
     ) {
       try {
         const ix = await initSpreadVault(
+          // @ts-ignore
           program,
           wallet.publicKey,
           admin,

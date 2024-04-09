@@ -28,6 +28,7 @@ export const VaultMaintenance = () => {
     if (wallet && program && spreadVault) {
       try {
         const ix = await setVol(
+          // @ts-ignore
           program,
           wallet.publicKey,
           spreadVault,
